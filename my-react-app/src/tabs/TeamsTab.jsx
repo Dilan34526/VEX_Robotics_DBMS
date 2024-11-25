@@ -1,7 +1,7 @@
 import React from 'react';
 
 const TeamsTab = () => {
-    <div className="bg-white p-6 rounded-lg shadow-md max-w-2xl mx-auto">
+    return (<div className="bg-white p-6 rounded-lg shadow-md max-w-2xl mx-auto">
             <h2 className="text-2xl font-semibold text-gray-800 mb-6">Teams</h2>
             <div className="space-y-4">
               <div className="flex gap-2">
@@ -31,7 +31,7 @@ const TeamsTab = () => {
                 </div>
               </div>
             </div>
-          </div>
+          </div>);
 };
 
 export default TeamsTab;

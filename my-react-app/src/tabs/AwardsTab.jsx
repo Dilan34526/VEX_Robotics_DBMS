@@ -1,7 +1,7 @@
 import React from 'react';
 
 const AwardsTab = () => {
-    <div className="bg-white p-6 rounded-lg shadow-md max-w-2xl mx-auto">
+    return (<div className="bg-white p-6 rounded-lg shadow-md max-w-2xl mx-auto">
       <h2 className="text-2xl font-semibold text-gray-800 mb-6">Awards</h2>
       <div className="space-y-6">
         {/* Award Buttons */}
@@ -35,7 +35,7 @@ const AwardsTab = () => {
           </div>
         </div>
       </div>
-    </div>
+    </div>);
 };
 
 export default AwardsTab;
