@@ -1,3 +1,7 @@
+/**
+ * @file home to all the sql queries
+ */
+
 import postgres from "postgres";
 
 const sql = postgres({

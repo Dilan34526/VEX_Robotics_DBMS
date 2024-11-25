@@ -1,28 +1,30 @@
 import express from "express";
+import cors from "cors";
 import { createSchemas, getSeasons, insertSeason } from "./query";
-import { requireQueryParams, wrapAsyncErrors } from "./middleware";
+import { requireBodyParams, wrapAsyncErrors } from "./middleware";
 
 const app = express();
+app.use(cors()); // allow cors
+app.use(express.json()); // allow request bodies
 
 const season = express.Router();
 
-
-season.get("/create",
+season.post("/create",
     wrapAsyncErrors(
-        async (req, res) => {
+        (async (req, res) => {
             await createSchemas();
             res.json({
                 error: false,
             });
-        },
+        }) satisfies express.RequestHandler,
     ),
 );
 
-season.get("/add",
-    requireQueryParams("year", "name"),
+season.put("/add",
+    requireBodyParams("year", "name"),
     wrapAsyncErrors(
         async (req, res) => {
-            await insertSeason(parseInt(req.query.year), req.query.name);
+            await insertSeason(req.body.year, req.body.name);
             res.json({
                 error: false,
                 data: await getSeasons(),
