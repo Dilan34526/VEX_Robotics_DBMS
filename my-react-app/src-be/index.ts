@@ -7,9 +7,7 @@ const app = express();
 app.use(cors()); // allow cors
 app.use(express.json()); // allow request bodies
 
-const season = express.Router();
-
-season.post("/create",
+app.post("/create",
     wrapAsyncErrors(
         (async (req, res) => {
             await createSchemas();
@@ -20,6 +18,7 @@ season.post("/create",
     ),
 );
 
+const season = express.Router();
 season.put("/add",
     requireBodyParams("year", "name"),
     wrapAsyncErrors(
