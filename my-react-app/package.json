@@ -7,10 +7,14 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "be": "vite-node ./src-be/index.ts",
+    "start": "concurrently --kill-others \"npm run dev\" \"npm run be\" -c yellow.bold,magenta.bold -n FE,BE"
   },
   "dependencies": {
     "clsx": "^2.1.1",
+    "express": "^4.21.1",
+    "postgres": "^3.4.5",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^7.0.1",
@@ -19,10 +23,12 @@
   "devDependencies": {
     "@eslint/js": "^9.13.0",
     "@shadcn/ui": "^0.0.4",
+    "@types/node": "^22.9.3",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
     "@vitejs/plugin-react": "^4.3.3",
     "autoprefixer": "^10.4.20",
+    "concurrently": "^9.1.0",
     "eslint": "^9.13.0",
     "eslint-plugin-react": "^7.37.2",
     "eslint-plugin-react-hooks": "^5.0.0",
@@ -30,6 +36,7 @@
     "globals": "^15.11.0",
     "postcss": "^8.4.49",
     "tailwindcss": "^3.4.15",
-    "vite": "^5.4.10"
+    "vite": "^5.4.10",
+    "vite-node": "^2.1.5"
   }
 }
