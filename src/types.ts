@@ -41,6 +41,7 @@ export type VdbAward = {
     award_name: string,
     award_event_id: number,
     award_team_id: string,
+    award_qualification: string,
 };
 
 export type VdbContact = {

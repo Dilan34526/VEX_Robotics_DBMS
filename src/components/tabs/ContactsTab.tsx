@@ -26,6 +26,9 @@ export const ContactsTab = () => {
             <button className="w-full bg-green-500 text-white p-2 rounded-md hover:bg-green-600">
               Find triple impact contributors
             </button>
+            <button className="w-full bg-red-500 text-white p-2 rounded-md hover:bg-red-600">
+              Find mentor award candidates
+            </button>
           </div>
         </div>
 

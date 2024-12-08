@@ -29,12 +29,14 @@ export const AwardsTab = () => {
           {loading ? (
             <div className="p-4">Loading...</div>
           ) : (
-            awards?.map(award => (
+            awards!.map(award => (
               <div key={award.award_id} className="p-4 border-b hover:bg-gray-50">
                 <div className="flex justify-between items-center">
                   <div className="flex items-center gap-2">
                     <span className="font-medium">{award.award_name}</span>
                     <span className="text-sm text-gray-600">({award.award_team_id})</span>
+                    &#x2192;
+                    <span>{award.award_qualification}</span>
                   </div>
                   <button className="text-red-500 hover:text-red-700">
                     Remove

@@ -100,7 +100,7 @@ export const LaunchPage = () => {
             <div className="flex justify-end mt-6">
               <button
                 onClick={handleNextPage}
-                className="inline-flex items-center px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                className="inline-flex items-center pl-4 pr-2 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
               >
                 Next
                 <svg
