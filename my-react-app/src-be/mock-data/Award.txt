@@ -1,0 +1,10 @@
+1	Innovate Award	State	71100S	2
+2	Think Award	State	229V	2
+3	Amaze Award	State	11101B	2
+4	Build Award	State	360X	2
+5	Create Award	State	6277C	2
+6	Innovate Award	World	6121D	1
+7	Think Award	World	242A	1
+8	Amaze Award	World	242B	1
+9	Build Award	World	169X	1
+10	Create Award	World	169Y	1

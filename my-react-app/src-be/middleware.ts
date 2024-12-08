@@ -39,7 +39,7 @@ export const wrapAsyncErrors = (handler: express.RequestHandler) =>
         } catch (error) {
             res.json({
                 error: true,
-                message: (error as Error).message,
+                message: (error as Error).stack,
             });
         }
     }) satisfies express.RequestHandler;

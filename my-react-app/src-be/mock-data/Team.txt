@@ -1,0 +1,139 @@
+100A	Jugglenauts	Apogee Robotics	Bunker Hill	IN	United States
+123A	PROTOTYPE	The Alphabots	Suzhou	Jiangsu	China
+229V	ACE Robotics	ACE Robotics	Tavares	FL	United States
+338A	Iterated	High Caliber Robotics	Louisville	KY	United States
+355U	Umm...Actually	Fox Valley Robotics	Batavia	IL	United States
+355X	Hexa-Force	Fox Valley Robotics	Batavia	IL	United States
+355Y	Loose Screws	Fox Valley Robotics	Batavia	IL	United States
+360X	Full Circle	Vexcellent Minds	Coral Gables	FL	United States
+586E	Easy Breezy	PLYMOUTH HIGH SCHOOL	Plymouth	IN	United States
+621A	Captcha	Marion County STEM 4-H Club	Indianapolis	IN	United States
+884A	Space Pandas	MBX Foundation	Manhattan Beach	CA	United States
+929N	RagingBulls	Hereford High School	Parkton	MD	United States
+1037A	Molokai Robotics	MOLOKAI HIGH SCHOOL	Hoolehua	HI	United States
+1037B	Molokai Robotics	MOLOKAI HIGH SCHOOL	Hoolehua	HI	United States
+1115B	Brain Dead	GREENFIELD-CENTRAL HIGH SCHOOL	Greenfield	IN	United States
+1115E	Exothermic	GREENFIELD-CENTRAL HIGH SCHOOL	Greenfield	IN	United States
+1165A	Redemption	Caution Tape Independent Program	Markham	ON	Canada
+1233A	1233 Astro	CROWN POINT HIGH SCHOOL	Crown Point	IN	United States
+1233G	1233 Galactic	CROWN POINT HIGH SCHOOL	Crown Point	IN	United States
+1233H	1233 Hazard	CROWN POINT HIGH SCHOOL	Crown Point	IN	United States
+1233J	1233 Janitors	CROWN POINT HIGH SCHOOL	Crown Point	IN	United States
+1239E	Flashbang	Private	Oklahoma City	OK	United States
+1624A	MHS Robotics Team	Martinsville High School	Martinsville	IN	United States
+1629X	Popping Off	Our Garages	Los Angeles	CA	United States
+1687C	Genesis	Private	Redmond	WA	United States
+2011B	Biohazard	BRECKSVILLE-BROADVIEW HEIGHTS HIGH SCHOOL	Broadview Heights	OH	United States
+2011D	Dopamine	BRECKSVILLE-BROADVIEW HEIGHTS HIGH SCHOOL	Broadview Heights	OH	United States
+2011J	Jester	BRECKSVILLE-BROADVIEW HEIGHTS HIGH SCHOOL	Broadview Heights	OH	United States
+2011K	Kinetic	BRECKSVILLE-BROADVIEW HEIGHTS HIGH SCHOOL	Broadview Heights	OH	United States
+2140A	Tungsten	JENISON HIGH SCHOOL	Jenison	MI	United States
+2140C	The Hack Job V3	JENISON HIGH SCHOOL	Jenison	MI	United States
+2140D	Crash Out	JENISON HIGH SCHOOL	Jenison	MI	United States
+2393S	Valor		Carmel	IN	United States
+2624C	CapyVaders	N/A	St Louis	MO	United States
+2719A	FireCats	TRITON CENTRAL HIGH SCHOOL	Fairland	IN	United States
+2719F	Pushbot Mafia	TRITON CENTRAL HIGH SCHOOL	Fairland	IN	United States
+2774A	Jackson Christian-Conquest Robotics	JACKSON CHRISTIAN SCHOOL	Jackson	TN	United States
+2775V	Jackson Area Robotics	Jackson Area Robotics	Jackson	TN	United States
+2849B	AvengNerds	Caston Robotics	Rochester	IN	United States
+3150A	Silver Owl	Silver Owl Robotics	Richmond Hill	ON	Canada
+3150C	Columnists	Silver Owl Robotics Club	Richmond Hill	ON	Canada
+5069Z	Ctrl + Z	Millard North High School	Omaha	NE	United States
+6008D	Dark Mode	NORTH UNION HIGH SCHOOL	Richwood	OH	United States
+6210A	HCS: Apocalypse	Heritage Christian School	Indianapolis	IN	United States
+6210G	HCS: Great Green Grape	Heritage Christian School	Indianapolis	IN	United States
+6210M	HCS: Meta Mafia	Heritage Christian School	Indianapolis	IN	United States
+6210T	HCS: Traumatized	Heritage Christian School	Indianapolis	IN	United States
+6219X	Charging...	NEENAH HIGH	Neenah	WI	United States
+6277B	One Pancake	THE HARVEY SCHOOL	Katonah	NY	United States
+6277C	Hard Wired	THE HARVEY SCHOOL	Katonah	NY	United States
+6842K	Killer Instinct	PARK TUDOR SCHOOL	Indianapolis	IN	United States
+6842V	Vicious Vortex	PARK TUDOR SCHOOL	Indianapolis	IN	United States
+7282K	AutoFlashes: Kachow	Franklin Central High School	Indianapolis	IN	United States
+7282R	AutoFlashes: Ratatouille	Franklin Central High School	Indianapolis	IN	United States
+7368M	Drive it LIKE you stole it	Covenant Christian High School	Indianapolis	IN	United States
+7368W	Pursuit	Covenant Christian High School	Indianapolis	IN	United States
+7701P	Phobophobia	ZIONSVILLE COMMUNITY HIGH SCHOOL	Zionsville	IN	United States
+7701X	(formerly Twitter)	Zionsville Community High School	Zionsville	IN	United States
+7862H	Highlanders	Hesston High School	Hesston	KS	United States
+8626K	KACHIGGA		Grand Rapids	MI	United States
+8675F	Fuzzy	NRAI	Omaha	NE	United States
+8675V	Volt	NRAI	Omaha	NE	United States
+8823A	Alter Ego	Milford High School	Milford	OH	United States
+8823Z	Zoom Call	Milford High School	Milford	OH	United States
+9065P	Phantom Robotics	PLATTE COUNTY HIGH	Platte City	MO	United States
+10009A	Arc Robotics	Arc Robotics	San Ramon	CA	United States
+10102A	[Vinci] Vinsanity	iSTEAM Academy	Burlington	MA	United States
+10102X	[Vinci] Xypher	iSTEAM Academy	Burlington	MA	United States
+10278A	APEX	Horizon West Robotics	Winter Garden	FL	United States
+11101B	Barcbots Getting There	Barcbots	Cupertino	CA	United States
+11101X	Coming Soon	Barcbots	Cupertino	CA	United States
+16868C	Rushdown		Markham	ON	Canada
+17788F	Frostbyte	Tundra Robotics	Valley	NE	United States
+30809S	Maximum Output	Maximum Robotics	Timnath	CO	United States
+32092G	Mile High Mechanics	Stargate Charter School	Thornton	CO	United States
+38141C	PiBotics Cardinals	IGNITE INSTITUTE	Erlanger	KY	United States
+38141D	PiBotics Demons	IGNITE INSTITUTE	Erlanger	KY	United States
+39313Z	Insomniac Black	ASOTIN JR SR HIGH	Asotin	WA	United States
+45618A	Striking Panthers	PLANO EAST SR HIGH SCHOOL	Plano	TX	United States
+50421A	Rogue 1	Summit City Robotics, Inc.	Fort Wayne	IN	United States
+53863H	Heroic Robotics	RANDALL K. COOPER HIGH SCHOOL	Union	KY	United States
+57249A	Raptor Robotics - Goose	Ravenwood High School	Brentwood	TN	United States
+57249B	Raptor Robotics - Blitzkrieg	Ravenwood High School	Brentwood	TN	United States
+57249C	Raptor Robotics - JOKR	Ravenwood High School	Brentwood	TN	United States
+57711X	Rocky	Alchemy Global STEM Institute	Morristown	TN	United States
+71100S	Slurpee	Phantom Robotics	Marion	IN	United States
+73641A	Rage Against the MACHINE	LAKE CENTRAL HIGH SCHOOL	St. John	IN	United States
+73641R	Reinventing the STEEL	LAKE CENTRAL HIGH SCHOOL	St. John	IN	United States
+73641S	Black SabBOT	LAKE CENTRAL HIGH SCHOOL	St. John	IN	United States
+77787B	World Controller	SVRA	Dublin	CA	United States
+80920A	Irvine Ruiguan - Arctic Penguins	RuiGuan Tech	Irvine	CA	United States
+85142Z	Geared UP	QCRF	Queen Creek	AZ	United States
+91416N	S.W.A.T.	Wahoo Robotics (Saunders Catholic Schools & Wahoo Public Schools)	Wahoo	NE	United States
+94517X	Mecha Maelstrom	Clayton Valley Charter High School	Concord	CA	United States
+97934H	RoboPanthers - Hear Me Out	FRANKLIN ROAD ACADEMY	Nashville	TN	United States
+97934S	RoboPanthers - Kirkland Signature	FRANKLIN ROAD ACADEMY	Nashville	TN	United States
+97934U	RoboPanthers - Up the Ante	FRANKLIN ROAD ACADEMY	Nashville	TN	United States
+97934X	RoboPanthers - Tomato Soup	FRANKLIN ROAD ACADEMY	Nashville	TN	United States
+99904B	Boogie Woogie	NEW PALESTINE HIGH SCHOOL	New Palestine	IN	United States
+99904C	Catastrophic	NEW PALESTINE HIGH SCHOOL	New Palestine	IN	United States
+99904E	I'm a Banana	NEW PALESTINE HIGH SCHOOL	New Palestine	IN	United States
+99904W	Wooosh	NEW PALESTINE HIGH SCHOOL	New Palestine	IN	United States
+81A	VEXMEN: Armageddon	Brandywine Robotics Inc.	Chester Springs	PA	United States
+81F	VEXMEN:	Brandywine Robotics Inc.	Chester Springs	PA	United States
+81H	VEXMEN:	Brandywine Robotics Inc.	Chester Springs	PA	United States
+81K	VEXMEN:	Brandywine Robotics Inc.	Chester Springs	PA	United States
+81P	VEXMEN:	Brandywine Robotics Inc.	Chester Springs	PA	United States
+91A	VEXMEN:	Brandywine Robotics Inc.	Chester Springs	PA	United States
+91F	VEXMEN:	Brandywine Robotics Inc.	Chester Springs	PA	United States
+91R	VEXMEN:	Brandywine Robotics Inc.	Chester Springs	PA	United States
+91X	VEXMEN:	Brandywine Robotics Inc.	Chester Springs	PA	United States
+169A	The Cavalry	THE HAVERFORD SCHOOL	Haverford	PA	United States
+169E	The Cavalry	THE HAVERFORD SCHOOL	Haverford	PA	United States
+169F	The Cavalry	THE HAVERFORD SCHOOL	Haverford	PA	United States
+169X	The Cavalry	THE HAVERFORD SCHOOL	Haverford	PA	United States
+169Y	The Cavalry	THE HAVERFORD SCHOOL	Haverford	PA	United States
+169Z	The Cavalry	THE HAVERFORD SCHOOL	Haverford	PA	United States
+197D	Daedalus	Harriton Senior High School	Rosemont	PA	United States
+242A	The Firebirds	HOLY GHOST PREP	Bensalem	PA	United States
+242B	The Firebirds	HOLY GHOST PREP	Bensalem	PA	United States
+242C	The Firebirds	HOLY GHOST PREP	Bensalem	PA	United States
+242E	The Firebirds	HOLY GHOST PREP	Bensalem	PA	United States
+242Z	The Firebirds	HOLY GHOST PREP	Bensalem	PA	United States
+729M	Magnus	Downingtown Robotics	Chester Springs	PA	United States
+741A	Raptors	Raptor Robotics - Neighborhood team	Malvern	PA	United States
+1267A	Knights: Ascend	DELAWARE COUNTY CHRISTIAN SCHOOL	Newtown Square	PA	United States
+1267B	Knights Robotics	DELAWARE COUNTY CHRISTIAN SCHOOL	Newtown Square	PA	United States
+1267D	Knights Robotics	DELAWARE COUNTY CHRISTIAN SCHOOL	Newtown Square	PA	United States
+1267F	Knights	DELAWARE COUNTY CHRISTIAN SCHOOL	Newtown Square	PA	United States
+1267G	Knights Robotics	DELAWARE COUNTY CHRISTIAN SCHOOL	Newtown Square	PA	United States
+1267X	Knights	Delaware County Christian School	Newtown Square	PA	United States
+1274A	Igneous Robotics	Igneous Robotics	Phoenixville	PA	United States
+1274B	Igneous Robotics	Igneous Robotics	Phoenixville	PA	United States
+4001A	Aetherium	PARKLAND HIGH SCHOOL	Allentown	PA	United States
+4001E	Dremelition	PARKLAND HIGH SCHOOL	Allentown	PA	United States
+6121A	The Pioneers	CONESTOGA SHS	Berwyn	PA	United States
+6121D	The Pioneers	CONESTOGA SHS	Paoli	PA	United States
+8114A	Cherry and Steel 1	BERMUDIAN SPRINGS HIGH SCHOOL	York Springs	PA	United States
+19355A	G.O.A.T. Robotics	G.O.A.T. Robotics	Newtown Square	PA	United States

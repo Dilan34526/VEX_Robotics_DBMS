@@ -14,5 +14,9 @@
 
     /* Linting */
     "strict": true,
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["./*"],
+    },
   },
 }
