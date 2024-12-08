@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useAtom } from 'jotai';
 import { selectedEventAtom } from '../../store';
 import { useTeams } from '../../hooks';
 
 export const TeamsTab = () => {
     const [selectedEvent, setSelectedEvent] = useAtom(selectedEventAtom);
-    const { teams, loading } = useTeams(selectedEvent);
+    const [searchQuery, setSearchQuery] = useState('');
+    const { teams, loading } = useTeams(selectedEvent, searchQuery);
 
     return (
     <div className="bg-white p-6 rounded-lg shadow-md max-w-2xl mx-auto">
@@ -16,6 +17,8 @@ export const TeamsTab = () => {
                   type="text"
                   placeholder="Search teams..."
                   className="flex-1 p-2 border border-gray-300 rounded-md"
+                  value={searchQuery}
+                  onChange={e => setSearchQuery(e.target.value)}
                 />
                 <button className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
                   Add Team

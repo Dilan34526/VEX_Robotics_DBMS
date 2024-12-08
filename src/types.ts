@@ -27,7 +27,7 @@ export type VdbEvent = {
 };
 
 export type VdbTeam = {
-    team_id: number,
+    team_id: string,
     team_name: string,
     team_organization: string,
     team_location: string,
@@ -40,7 +40,7 @@ export type VdbAward = {
     award_id: number,
     award_name: string,
     award_event_id: number,
-    award_team_id: number,
+    award_team_id: string,
 };
 
 export type VdbContact = {
@@ -52,12 +52,12 @@ export type VdbContact = {
 };
 
 export type VdbJudge = VdbContact & {
-    team_id: number,
+    team_id: string,
     judge_hours: number,
 };
 
 export type VdbMentor = VdbContact & {
-    team_id: number,
+    team_id: string,
 };
 
 export type VdbVolunteer = VdbContact & {

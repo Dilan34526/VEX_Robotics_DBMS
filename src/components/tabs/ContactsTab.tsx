@@ -1,11 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useAtom } from 'jotai';
 import { selectedEventAtom } from '../../store';
 import { useContacts, useJudges, useMentors, useVolunteers } from '../../hooks';
 
 export const ContactsTab = () => {
     const [selectedEvent, setSelectedEvent] = useAtom(selectedEventAtom);
-    const { judges, mentors, volunteers, loading } = useContacts(selectedEvent);
+    const [judgesSearch, setJudgesSearch] = useState('');
+    const [mentorsSearch, setMentorsSearch] = useState('');
+    const [volunteersSearch, setVolunteersSearch] = useState('');
+    const { judges, mentors, volunteers, loading } = useContacts(selectedEvent, judgesSearch, mentorsSearch, volunteersSearch);
 
     return (<div className="flex flex-col gap-8 bg-white p-6 rounded-lg shadow-md max-w-2xl mx-auto">
       <h2 className="text-2xl font-semibold text-gray-800">Event contacts</h2>
@@ -33,6 +36,8 @@ export const ContactsTab = () => {
             <div className="flex gap-2">
               <input
                 type="text"
+                value={volunteersSearch}
+                onChange={(e) => setVolunteersSearch(e.target.value)}
                 placeholder="Search volunteers..."
                 className="flex-1 p-2 border border-gray-300 rounded-md"
               />
@@ -61,6 +66,8 @@ export const ContactsTab = () => {
             <div className="flex gap-2">
               <input
                 type="text"
+                value={mentorsSearch}
+                onChange={(e) => setMentorsSearch(e.target.value)}
                 placeholder="Search mentors..."
                 className="flex-1 p-2 border border-gray-300 rounded-md"
               />
@@ -68,7 +75,6 @@ export const ContactsTab = () => {
                 Add
               </button>
             </div>
-            {/* New Button for Mentor-Judge Same Team */}
             <div className="border rounded-md max-h-48 overflow-y-auto">
               {loading ? (
                 <div className="p-2">Loading...</div>
@@ -91,6 +97,8 @@ export const ContactsTab = () => {
             <div className="flex gap-2">
               <input
                 type="text"
+                value={judgesSearch}
+                onChange={(e) => setJudgesSearch(e.target.value)}
                 placeholder="Search judges..."
                 className="flex-1 p-2 border border-gray-300 rounded-md"
               />
@@ -98,7 +106,6 @@ export const ContactsTab = () => {
                 Add
               </button>
             </div>
-            {/* New Button for Triple Impact */}
             <div className="border rounded-md max-h-48 overflow-y-auto">
               {loading ? (
                 <div className="p-2">Loading...</div>

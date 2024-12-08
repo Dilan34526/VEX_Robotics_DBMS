@@ -3,21 +3,27 @@ import { VdbRes, VdbMatch, VdbTeam, VdbMatchRaw, VdbJudge, VdbMentor, VdbVolunte
 
 type VdbEvent = { event_id: number };
 
-const useFetch = <O, T=O>(
+const cache = new Map<string, any>();
+
+const useCachedFetch = <O, T=O>(
     url: string, 
     transformData: (data: O) => T=data => data as unknown as T,
 ) => {
-    const [data, setData] = useState<T | null>(null);
-    const [loading, setLoading] = useState(true);
+    const [data, setData] = useState<T | null>(cache.get(url) ?? null);
+    const [loading, setLoading] = useState(!cache.has(url));
 
     useEffect(() => {
-        (async () => {
-            const response = await fetch(url);
-            const responseData: VdbRes<O> = await response.json();
-            
-            setData(transformData(responseData.data!));
-            setLoading(false);
-        })();
+        if (!cache.has(url)) {
+            (async () => {
+                const response = await fetch(url);
+                const responseData: VdbRes<O> = await response.json();
+                
+                const transformedData = transformData(responseData.data!);
+                cache.set(url, transformedData);
+                setData(transformedData);
+                setLoading(false);
+            })();
+        }
     }, [url, transformData]);
 
     return { data, loading };
@@ -29,7 +35,7 @@ export const useMatches = (selectedEvent: VdbEvent | null) => {
     }
 
 
-    const { data: matches, loading } = useFetch(
+    const { data: matches, loading } = useCachedFetch(
         `//localhost:5174/event/${selectedEvent.event_id}/match`, 
         (matches: VdbMatchRaw[]) => 
             matches.map(match => ({
@@ -41,65 +47,85 @@ export const useMatches = (selectedEvent: VdbEvent | null) => {
     return { matches, loading };
 };
 
-export const useTeams = (selectedEvent: VdbEvent | null) => {
+export const useTeams = (selectedEvent: VdbEvent | null, searchQuery='') => {
     if (selectedEvent === null) {
         return {teams: null, loading: true};
     }
 
-    const { data: teams, loading } = useFetch<VdbTeam[]>(
+    const { data, loading } = useCachedFetch<VdbTeam[]>(
         `//localhost:5174/event/${selectedEvent.event_id}/team`,
     );
+
+    let teams = data;
+    if (searchQuery !== '') {  
+        teams = teams?.filter(team => `${team.team_id} ${team.team_name}`.toLowerCase().includes(searchQuery.toLowerCase())) ?? null;
+    }
 
     return { teams, loading };
 };
 
-export const useJudges = (selectedEvent: VdbEvent | null) => {
+export const useJudges = (selectedEvent: VdbEvent | null, judgesSearch: string) => {
     if (selectedEvent === null) {
         return {judges: null, loading: true};
     }
 
-    const { data: judges, loading } = useFetch<VdbContact[]>(
+    const { data, loading } = useCachedFetch<VdbContact[]>(
         `//localhost:5174/event/${selectedEvent.event_id}/judge`,
         judges => judges.map(judge => ({...judge}))
     );
 
+    let judges = data;
+    if (judgesSearch !== '') {
+        judges = judges?.filter(judge => `${judge.contact_first_name} ${judge.contact_last_name}`.toLowerCase().includes(judgesSearch.toLowerCase())) ?? null;
+    }
+
     return { judges, loading };
 };
 
-export const useMentors = (selectedEvent: VdbEvent | null) => {
+export const useMentors = (selectedEvent: VdbEvent | null, mentorsSearch: string) => {
     if (selectedEvent === null) {
         return {mentors: null, loading: true};
     }
 
-    const { data: mentors, loading } = useFetch<VdbMentor[]>(
+    const { data, loading } = useCachedFetch<VdbMentor[]>(
         `//localhost:5174/event/${selectedEvent.event_id}/mentor`,
         mentors => mentors.map(mentor => ({...mentor}))
     );
 
+    let mentors = data;
+    if (mentorsSearch !== '') {
+        mentors = mentors?.filter(mentor => `${mentor.contact_first_name} ${mentor.contact_last_name}`.toLowerCase().includes(mentorsSearch.toLowerCase())) ?? null;
+    }
+
     return { mentors, loading };
 };
 
-export const useVolunteers = (selectedEvent: VdbEvent | null) => {
+export const useVolunteers = (selectedEvent: VdbEvent | null, volunteersSearch: string) => {
     if (selectedEvent === null) {
         return {volunteers: null, loading: true};
     }
 
-    const { data: volunteers, loading } = useFetch<VdbContact[]>(
+    const { data, loading } = useCachedFetch<VdbContact[]>(
         `//localhost:5174/event/${selectedEvent.event_id}/volunteer`, 
         volunteers => volunteers.map(volunteer => ({...volunteer}))
     );
 
+    let volunteers = data;
+    if (volunteersSearch !== '') {
+        volunteers = volunteers?.filter(volunteer => `${volunteer.contact_first_name} ${volunteer.contact_last_name}`.toLowerCase().includes(volunteersSearch.toLowerCase())) ?? null;
+    }
+
     return { volunteers, loading };
 }; 
 
-export const useContacts = (selectedEvent: VdbEvent | null) => {
+export const useContacts = (selectedEvent: VdbEvent | null, judgesSearch: string, mentorsSearch: string, volunteersSearch: string) => {
     if (selectedEvent === null) {
         return {judges: null, mentors: null, volunteers: null, loading: true};
     }
 
-    const { judges, loading: judgesLoading } = useJudges(selectedEvent);
-    const { mentors, loading: mentorsLoading } = useMentors(selectedEvent);
-    const { volunteers, loading: volunteersLoading } = useVolunteers(selectedEvent);
+    const { judges, loading: judgesLoading } = useJudges(selectedEvent, judgesSearch);
+    const { mentors, loading: mentorsLoading } = useMentors(selectedEvent, mentorsSearch);
+    const { volunteers, loading: volunteersLoading } = useVolunteers(selectedEvent, volunteersSearch);
     const { teams, loading: teamsLoading } = useTeams(selectedEvent);
 
     if (judgesLoading || mentorsLoading || volunteersLoading || teamsLoading) {
@@ -140,7 +166,7 @@ export const useAwards = (selectedEvent: VdbEvent | null) => {
         return {awards: null, loading: true};
     }
 
-    const { data: awards, loading } = useFetch<VdbAward[]>(
+    const { data: awards, loading } = useCachedFetch<VdbAward[]>(
         `//localhost:5174/event/${selectedEvent.event_id}/award`,
     );
 
