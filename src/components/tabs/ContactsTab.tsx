@@ -23,9 +23,6 @@ export const ContactsTab = () => {
             <button className="w-full bg-purple-500 text-white p-2 rounded-md hover:bg-purple-600">
               List mentors judging same team
             </button>
-            <button className="w-full bg-green-500 text-white p-2 rounded-md hover:bg-green-600">
-              Find triple impact contributors
-            </button>
             <button className="w-full bg-red-500 text-white p-2 rounded-md hover:bg-red-600">
               Find mentor award candidates
             </button>
@@ -116,7 +113,7 @@ export const ContactsTab = () => {
                 judges?.map((judge) => (
                   <div key={judge.contact_id} className="flex gap-2 items-center p-2 border-b hover:bg-gray-50">
                     <span>{judge.contact_first_name} {judge.contact_last_name}</span>
-                    <span className="text-gray-500">({judge.teams.map(team => team.team_id).join(', ')})</span>
+                    <span className="text-gray-500">({judge.teams.map(team => team.team_id).join(', ')}; {judge.hours} h)</span>
                   </div>
                 ))
               )}

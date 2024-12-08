@@ -1,42 +1,46 @@
 import { useState, useEffect } from 'react';
-import { VdbRes, VdbMatch, VdbTeam, VdbMatchRaw, VdbJudge, VdbMentor, VdbVolunteer, VdbContact, VdbAward } from './types';
+import { VdbRes, VdbMatch, VdbTeam, VdbMatchRaw, VdbJudge, VdbMentor, VdbVolunteer, VdbContact, VdbAward, VdbSeason, VdbTripleImpactContributor } from './types';
 
 type VdbEvent = { event_id: number };
 
 const cache = new Map<string, any>();
 
-const useCachedFetch = <O, T=O>(
-    url: string, 
+export const useCachedFetch = <O, T=O>(
+    url: string | null, 
     transformData: (data: O) => T=data => data as unknown as T,
 ) => {
-    const [data, setData] = useState<T | null>(cache.get(url) ?? null);
-    const [loading, setLoading] = useState(!cache.has(url));
+    const [data, setData] = useState<T | null>(null);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        if (!cache.has(url)) {
-            (async () => {
-                const response = await fetch(url);
-                const responseData: VdbRes<O> = await response.json();
-                
-                const transformedData = transformData(responseData.data!);
-                cache.set(url, transformedData);
-                setData(transformedData);
-                setLoading(false);
-            })();
+        setLoading(true);
+
+        if (url === null) return;
+
+        if (cache.has(url)) {
+            setData(cache.get(url));
+            setLoading(false);
         }
+
+        (async () => {
+            const response = await fetch(url);
+            const responseData: VdbRes<O> = await response.json();
+            
+            const transformedData = transformData(responseData.data!);
+            cache.set(url, transformedData);
+            setData(transformedData);
+            setLoading(false);
+        })();
     }, [url, transformData]);
 
     return { data, loading };
 };
 
 export const useMatches = (selectedEvent: VdbEvent | null) => {
-    if (selectedEvent === null) {
-        return {matches: null, loading: true};
-    }
 
 
     const { data: matches, loading } = useCachedFetch(
-        `//localhost:5174/event/${selectedEvent.event_id}/match`, 
+        selectedEvent === null ? null : `//localhost:5174/event/${selectedEvent.event_id}/match`, 
         (matches: VdbMatchRaw[]) => 
             matches.map(match => ({
                 ...match,
@@ -48,12 +52,9 @@ export const useMatches = (selectedEvent: VdbEvent | null) => {
 };
 
 export const useTeams = (selectedEvent: VdbEvent | null, searchQuery='') => {
-    if (selectedEvent === null) {
-        return {teams: null, loading: true};
-    }
 
     const { data, loading } = useCachedFetch<VdbTeam[]>(
-        `//localhost:5174/event/${selectedEvent.event_id}/team`,
+        selectedEvent === null ? null : `//localhost:5174/event/${selectedEvent.event_id}/team`,
     );
 
     let teams = data;
@@ -65,12 +66,9 @@ export const useTeams = (selectedEvent: VdbEvent | null, searchQuery='') => {
 };
 
 export const useJudges = (selectedEvent: VdbEvent | null, judgesSearch: string) => {
-    if (selectedEvent === null) {
-        return {judges: null, loading: true};
-    }
 
-    const { data, loading } = useCachedFetch<VdbContact[]>(
-        `//localhost:5174/event/${selectedEvent.event_id}/judge`,
+    const { data, loading } = useCachedFetch<VdbJudge[]>(
+        selectedEvent === null ? null : `//localhost:5174/event/${selectedEvent.event_id}/judge`,
         judges => judges.map(judge => ({...judge}))
     );
 
@@ -83,12 +81,8 @@ export const useJudges = (selectedEvent: VdbEvent | null, judgesSearch: string) 
 };
 
 export const useMentors = (selectedEvent: VdbEvent | null, mentorsSearch: string) => {
-    if (selectedEvent === null) {
-        return {mentors: null, loading: true};
-    }
-
     const { data, loading } = useCachedFetch<VdbMentor[]>(
-        `//localhost:5174/event/${selectedEvent.event_id}/mentor`,
+        selectedEvent === null ? null : `//localhost:5174/event/${selectedEvent.event_id}/mentor`,
         mentors => mentors.map(mentor => ({...mentor}))
     );
 
@@ -101,12 +95,8 @@ export const useMentors = (selectedEvent: VdbEvent | null, mentorsSearch: string
 };
 
 export const useVolunteers = (selectedEvent: VdbEvent | null, volunteersSearch: string) => {
-    if (selectedEvent === null) {
-        return {volunteers: null, loading: true};
-    }
-
     const { data, loading } = useCachedFetch<VdbContact[]>(
-        `//localhost:5174/event/${selectedEvent.event_id}/volunteer`, 
+        selectedEvent === null ? null : `//localhost:5174/event/${selectedEvent.event_id}/volunteer`, 
         volunteers => volunteers.map(volunteer => ({...volunteer}))
     );
 
@@ -137,13 +127,21 @@ export const useContacts = (selectedEvent: VdbEvent | null, judgesSearch: string
     const mentorsById = new Map(mentors!.map(mentor => [mentor.contact_id, mentor]));
 
     const teamsByJudge = new Map<number, VdbTeam[]>();
+    const hoursByJudge = new Map<number, number>();
     const teamsByMentor = new Map<number, VdbTeam[]>();
     for (const team of teams!) {
         const judge = judgesById.get(team.judge_contact_id)!;
+
         if (teamsByJudge.has(judge.contact_id)) {
             teamsByJudge.get(judge.contact_id)!.push(team);
         } else {
             teamsByJudge.set(judge.contact_id, [team]);
+        }
+
+        if (hoursByJudge.has(judge.contact_id)) {
+            hoursByJudge.set(judge.contact_id, hoursByJudge.get(judge.contact_id)! + judge.judge_hours);
+        } else {
+            hoursByJudge.set(judge.contact_id, judge.judge_hours);
         }
     }
 
@@ -156,19 +154,27 @@ export const useContacts = (selectedEvent: VdbEvent | null, judgesSearch: string
     }
 
     const mentorsList = [...teamsByMentor.entries()].map(([mentorId, teams]) => ({...mentorsById.get(mentorId)!, teams}));
-    const judgesList = [...teamsByJudge.entries()].map(([judgeId, teams]) => ({...judgesById.get(judgeId)!, teams}));
+    const judgesList = [...teamsByJudge.entries()].map(([judgeId, teams]) => ({
+        ...judgesById.get(judgeId)!,
+        teams,
+        hours: hoursByJudge.get(judgeId)!,
+    }));
 
     return { judges: judgesList, mentors: mentorsList, volunteers, loading: false };
 };
 
 export const useAwards = (selectedEvent: VdbEvent | null) => {
-    if (selectedEvent === null) {
-        return {awards: null, loading: true};
-    }
-
     const { data: awards, loading } = useCachedFetch<VdbAward[]>(
-        `//localhost:5174/event/${selectedEvent.event_id}/award`,
+        selectedEvent === null ? null : `//localhost:5174/event/${selectedEvent.event_id}/award`,
     );
 
     return { awards, loading };
+};
+
+export const useTripleImpactContributor = (selectedSeason: VdbSeason | null) => {
+    const { data: tripleImpactContributor, loading } = useCachedFetch<VdbTripleImpactContributor>(
+        selectedSeason === null ? null : `//localhost:5174/season/${selectedSeason.season_year}/triple-impact-contributor`,
+    );
+
+    return { tripleImpactContributor, loading };
 };

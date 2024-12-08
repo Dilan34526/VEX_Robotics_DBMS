@@ -5,6 +5,9 @@ import { VexRoboticsLayout } from './VexRoboticsLayout';
 import { VdbRes, VdbSeason, VdbEvent } from '../types';
 import { selectedEventAtom } from '../store';
 import { useAtom } from 'jotai';
+import { useCachedFetch, useTripleImpactContributor } from '../hooks';
+
+
 
 export const LaunchPage = () => {
   const [seasons, setSeasons] = useState<VdbSeason[]>([]);
@@ -13,6 +16,7 @@ export const LaunchPage = () => {
   const [selectedEvent, setSelectedEvent] = useAtom(selectedEventAtom);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
+  const { tripleImpactContributor, loading: tripleImpactContributorLoading } = useTripleImpactContributor(selectedSeason);
 
   useEffect(() => {
     const fetchSeasons = async () => {
@@ -44,19 +48,17 @@ export const LaunchPage = () => {
         <div className="max-w-2xl mx-auto space-y-6">
           {/* Season Selection */}
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-700">
-              Select Season
-            </label>
+            <h3 className="text-lg font-medium text-gray-700 mb-3">Season</h3>
             <select
               value={selectedSeason?.season_year ?? ''}
               onChange={(e) => {
                 const selectedSeasonYear = Number(e.target.value);
                 const season = seasons.find((s) => s.season_year === selectedSeasonYear);
-                setSelectedSeason(season!);
+                setSelectedSeason(season ?? null);
               }}
               className="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             >
-              <option value="">Choose a season</option>
+              <option value={undefined}>Choose a season</option>
               {seasons.map((season) => (
                 <option
                   key={season.season_year}
@@ -67,23 +69,40 @@ export const LaunchPage = () => {
               ))}
             </select>
           </div>
+          
+          {selectedSeason && (
+            <>
+              <h4 className="text-md font-medium text-gray-700 mb-3">Season quick stats</h4>
+              <div className="grid grid-cols-2 gap-4 items-center" style={{gridTemplateColumns: '1fr 3fr'}}>
+                <h5 className="text-sm font-medium text-gray-700 mb-3">Triple impact contributor</h5>
+                {tripleImpactContributorLoading ? (
+                  <div className="flex gap-2 items-center space-y-2 ">Loading...</div>
+                ) : (
+                  tripleImpactContributor && (
+                    <div className="flex gap-2 items-center space-y-2 ">
+                      {tripleImpactContributor.contact_first_name} {tripleImpactContributor.contact_last_name} 
+                      <span className="text-sm text-gray-500">({tripleImpactContributor.total_hours} h = {tripleImpactContributor.volunteer_hours} volunteer + {tripleImpactContributor.mentor_hours} mentor + {tripleImpactContributor.judge_hours} judge)</span>
+                    </div>
+                  )
+                )}
+              </div>
+            </>
+          )}
 
           {/* Event Selection - Only shown if season is selected */}
           {selectedSeason && (
             <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">
-                Select Event
-              </label>
+              <h3 className="text-lg font-medium text-gray-700 mb-3">Event</h3>
               <select
                 value={selectedEvent?.event_id ?? ''}
                 onChange={(e) => {
                   const selectedEventId = Number(e.target.value);
                   const event = events.find((ev) => ev.event_id === selectedEventId);
-                  setSelectedEvent(event!);
+                  setSelectedEvent(event ?? null);
                 }}
                 className="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               >
-                <option value="">Choose an event</option>
+                <option value={undefined}>Choose an event</option>
                 {events
                   .filter((event) => event.event_season_year === selectedSeason.season_year)
                   .map((event) => (

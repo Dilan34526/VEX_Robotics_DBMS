@@ -88,3 +88,10 @@ export type VdbMatch = {
     match_time: Date,
     event_id: number,
 };
+
+export type VdbTripleImpactContributor = VdbContact &{
+    total_hours: number,
+    volunteer_hours: number,
+    mentor_hours: number,
+    judge_hours: number,
+};

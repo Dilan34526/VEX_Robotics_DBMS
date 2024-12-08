@@ -53,7 +53,7 @@ CREATE TABLE Registration (
     event_id INT NOT NULL REFERENCES Event(event_id),
     judge_contact_id INT NOT NULL REFERENCES Contact(contact_id),
     judge_notebook_score INT,
-    judge_hours INT NOT NULL DEFAULT 0,
+    judge_hours DECIMAL(6, 2) NOT NULL DEFAULT 0,
     PRIMARY KEY (team_id, event_id)
 );
 `;
@@ -62,7 +62,7 @@ CREATE TABLE Registration (
 CREATE TABLE Mentors (
     mentor_contact_id INT NOT NULL REFERENCES Contact(contact_id),
     team_id VARCHAR(16) NOT NULL REFERENCES Team(team_id),
-    mentor_hours INT NOT NULL DEFAULT 0,
+    mentor_hours DECIMAL(6, 2) NOT NULL DEFAULT 0,
     PRIMARY KEY (mentor_contact_id, team_id)
 );
 `;
@@ -71,7 +71,7 @@ CREATE TABLE Mentors (
 CREATE TABLE Volunteers (
     volunteer_contact_id INT NOT NULL REFERENCES Contact(contact_id),
     event_id INT NOT NULL REFERENCES Event(event_id),
-    volunteer_hours INT NOT NULL DEFAULT 0,
+    volunteer_hours DECIMAL(6, 2) NOT NULL DEFAULT 0,
     PRIMARY KEY (volunteer_contact_id, event_id)
 );
 `;
@@ -182,15 +182,15 @@ const loadMockData = (s=sql) => {
 
     const registrationPromise = Promise.all([teamPromise, eventPromise, contactPromise]).then(
         () => loadTable("./mock-data/Registration.txt", ([teamId, eventId, judgeId, judgeHours, score]) =>
-                insertRegistration(teamId, parseInt(eventId), parseInt(judgeId), parseInt(score), parseInt(judgeHours), s))
+                insertRegistration(teamId, parseInt(eventId), parseInt(judgeId), parseInt(score), parseFloat(judgeHours), s))
     );
     const mentorsPromise = Promise.all([contactPromise, teamPromise]).then(
         () => loadTable("./mock-data/Mentors.txt", ([mentorId, teamId, hours]) =>
-                insertMentors(parseInt(mentorId), teamId, parseInt(hours), s))
+                insertMentors(parseInt(mentorId), teamId, parseFloat(hours), s))
     );
     const volunteersPromise = Promise.all([contactPromise, eventPromise]).then(
         () => loadTable("./mock-data/Volunteers.txt", ([volunteerId, eventId, hours]) =>
-                insertVolunteers(parseInt(volunteerId), parseInt(eventId), parseInt(hours), s))
+                insertVolunteers(parseInt(volunteerId), parseInt(eventId), parseFloat(hours), s))
     );
     const awardPromise = registrationPromise.then(
         () => loadTable("./mock-data/Award.txt", ([id, name, qualification, teamId, eventId]) =>
@@ -217,11 +217,13 @@ const dropAllTables = async (s=sql) => {
 };
 
 
+// transaction that initializes the database schemas and mock data
 export const initialize = () => sql.begin(async sql => {
     await createSchemas(sql);
     await loadMockData(sql);
 });
 
+// transaction that resets the database
 export const reset = () => sql.begin(async sql => {
     await dropAllTables(sql);
     await createSchemas(sql);
@@ -238,27 +240,27 @@ SELECT *
     FROM Event;
 `;
 
-export const getTeamsByEventId = (eventId: string) => sql`
+export const getTeamsByEventId = (eventId: number) => sql`
 SELECT t.*, r.judge_contact_id, r.judge_notebook_score, r.judge_hours
     FROM Registration r
         JOIN Team t ON t.team_id = r.team_id
     WHERE r.event_id = ${eventId};
 `;
 
-export const getAwardsByEventId = (eventId: string) => sql`
+export const getAwardsByEventId = (eventId: number) => sql`
 SELECT *
     FROM Award
     WHERE award_event_id = ${eventId};
 `;
 
-export const getVolunteersByEventId = (eventId: string) => sql`
+export const getVolunteersByEventId = (eventId: number) => sql`
 SELECT DISTINCT c.*
     FROM Volunteers v
         JOIN Contact c ON v.volunteer_contact_id = c.contact_id
     WHERE v.event_id = ${eventId};  
 `;
 
-export const getMentorsByEventId = (eventId: string) => sql`
+export const getMentorsByEventId = (eventId: number) => sql`
 SELECT DISTINCT c.*, m.team_id
     FROM Mentors m
         JOIN Contact c ON m.mentor_contact_id = c.contact_id
@@ -266,15 +268,44 @@ SELECT DISTINCT c.*, m.team_id
     WHERE r.event_id = ${eventId};
 `;
 
-export const getJudgesByEventId = (eventId: string) => sql`  
-SELECT DISTINCT c.*
+export const getJudgesByEventId = (eventId: number) => sql`  
+SELECT DISTINCT c.*, r.judge_hours
     FROM Registration r
         JOIN Contact c ON r.judge_contact_id = c.contact_id
     WHERE r.event_id = ${eventId};
 `;
 
-export const getMatchesByEventId = (eventId: string) => sql`
+export const getMatchesByEventId = (eventId: number) => sql`
 SELECT *
     FROM Match
     WHERE event_id = ${eventId};
 `;
+
+export const getTripleImpactContributor = async (seasonYear: number) => (await sql`
+SELECT c.contact_first_name, c.contact_last_name,
+        SUM(v.volunteer_hours + m.mentor_hours + r.judge_hours) AS total_hours,
+        SUM(v.volunteer_hours) AS volunteer_hours,
+        SUM(m.mentor_hours) AS mentor_hours,
+        SUM(r.judge_hours) AS judge_hours
+    FROM Contact c
+        JOIN Registration r ON r.judge_contact_id = c.contact_id
+        JOIN Event ej ON ej.event_id = r.event_id
+        JOIN Mentors m ON m.mentor_contact_id = c.contact_id
+        JOIN Team t ON t.team_id = m.team_id
+        JOIN Volunteers v ON v.volunteer_contact_id = c.contact_id
+        JOIN Event ev ON ev.event_id = v.event_id
+    WHERE ej.event_season_year = ${seasonYear}
+        AND ev.event_season_year = ${seasonYear}
+        AND t.team_id IN (
+            SELECT r.team_id
+                FROM Registration r
+                    JOIN Event e ON e.event_id = r.event_id
+            WHERE e.event_season_year = ${seasonYear}
+        )
+    GROUP BY c.contact_id
+    HAVING SUM(v.volunteer_hours) > 0
+        AND SUM(m.mentor_hours) > 0
+        AND SUM(r.judge_hours) > 0
+    ORDER BY total_hours DESC
+    LIMIT 1;
+`)[0];

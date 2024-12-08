@@ -22,7 +22,7 @@ event.get("/:eventId/team",
             
             res.json({
                 error: false,
-                data: await getTeamsByEventId(eventId),
+                data: await getTeamsByEventId(parseInt(eventId)),
             });
         }
     )
@@ -35,7 +35,7 @@ event.get("/:eventId/award",
             
             res.json({
                 error: false,
-                data: await getAwardsByEventId(eventId)  
+                data: await getAwardsByEventId(parseInt(eventId)),
             });
         }
     )
@@ -48,7 +48,7 @@ event.get("/:eventId/volunteer",
             
             res.json({
                 error: false,
-                data: await getVolunteersByEventId(eventId)
+                data: await getVolunteersByEventId(parseInt(eventId)),
             });
         }
     )  
@@ -61,7 +61,7 @@ event.get("/:eventId/mentor",
             
             res.json({
                 error: false,
-                data: await getMentorsByEventId(eventId)  
+                data: await getMentorsByEventId(parseInt(eventId)),
             });
         }
     )
@@ -74,7 +74,7 @@ event.get("/:eventId/judge",
             
             res.json({
                 error: false,
-                data: await getJudgesByEventId(eventId)
+                data: await getJudgesByEventId(parseInt(eventId)),
             });  
         }
     )
@@ -87,7 +87,7 @@ event.get("/:eventId/match",
             
             res.json({
                 error: false,
-                data: await getMatchesByEventId(eventId)
+                data: await getMatchesByEventId(parseInt(eventId)),
             });
         }
     )

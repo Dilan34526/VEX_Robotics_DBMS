@@ -1,5 +1,5 @@
 import express from "express";
-import { getSeasons, insertSeason } from "@/query";
+import { getSeasons, getTripleImpactContributor, insertSeason } from "@/query";
 import { requireBodyParams, wrapAsyncErrors } from "@/middleware";
 
 export const season = express.Router();
@@ -24,6 +24,17 @@ season.get("/",
             res.json({
                 error: false,
                 data: await getSeasons(),
+            });
+        },
+    ),
+);
+
+season.get("/:seasonYear/triple-impact-contributor",
+    wrapAsyncErrors(
+        async (req, res) => {
+            res.json({
+                error: false,
+                data: await getTripleImpactContributor(parseInt(req.params.seasonYear)),
             });
         },
     ),
