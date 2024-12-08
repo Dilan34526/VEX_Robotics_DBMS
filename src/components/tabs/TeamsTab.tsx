@@ -1,25 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useAtom } from 'jotai';
 import { selectedEventAtom } from '../../store';
-import { VdbRes, VdbTeam } from '../../types';
+import { useTeams } from '../../hooks';
 
 export const TeamsTab = () => {
     const [selectedEvent, setSelectedEvent] = useAtom(selectedEventAtom);
-    const [teams, setTeams] = useState<VdbTeam[]>([]);
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        const fetchTeams = async () => {
-            const response = await fetch(`//localhost:5174/event/${selectedEvent?.event_id}/team`);
-            const data: VdbRes<VdbTeam[]> = await response.json();
-            setTeams(data.data!);
-            setLoading(false);
-        };
-
-        if (selectedEvent) {
-            fetchTeams();
-        }
-    }, [selectedEvent]);
+    const { teams, loading } = useTeams(selectedEvent);
 
     return (
     <div className="bg-white p-6 rounded-lg shadow-md max-w-2xl mx-auto">
@@ -43,7 +29,7 @@ export const TeamsTab = () => {
                   {loading ? (
                     <div className="p-3">Loading...</div>
                   ) : (
-                    teams.map((team) => (
+                    teams!.map((team) => (
                       <div key={team.team_id} className="p-2 border-b hover:bg-gray-50">
                         <div className="flex justify-between items-center">
                           <div className="flex gap-5">

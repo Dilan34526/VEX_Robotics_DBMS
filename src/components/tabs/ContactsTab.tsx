@@ -1,37 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useAtom } from 'jotai';
 import { selectedEventAtom } from '../../store';
-import { VdbRes, VdbContact } from '../../types';
+import { useJudges, useMentors, useVolunteers } from '../../hooks';
 
 export const ContactsTab = () => {
     const [selectedEvent, setSelectedEvent] = useAtom(selectedEventAtom);
-    const [volunteers, setVolunteers] = useState<VdbContact[]>([]);
-    const [mentors, setMentors] = useState<VdbContact[]>([]);
-    const [judges, setJudges] = useState<VdbContact[]>([]);
-    const [loading, setLoading] = useState(true);
+    const { volunteers, loading: volunteersLoading } = useVolunteers(selectedEvent);
+    const { mentors, loading: mentorsLoading } = useMentors(selectedEvent);  
+    const { judges, loading: judgesLoading } = useJudges(selectedEvent);
 
-    useEffect(() => {
-        const fetchContacts = async () => {
-            const [volunteersRes, mentorsRes, judgesRes] = await Promise.all([
-                fetch(`//localhost:5174/event/${selectedEvent?.event_id}/volunteer`),
-                fetch(`//localhost:5174/event/${selectedEvent?.event_id}/mentor`),
-                fetch(`//localhost:5174/event/${selectedEvent?.event_id}/judge`)
-            ]);
-
-            const volunteersData: VdbRes<VdbContact[]> = await volunteersRes.json();
-            const mentorsData: VdbRes<VdbContact[]> = await mentorsRes.json();
-            const judgesData: VdbRes<VdbContact[]> = await judgesRes.json();
-
-            setVolunteers(volunteersData.data!);
-            setMentors(mentorsData.data!);
-            setJudges(judgesData.data!);
-            setLoading(false);
-        };
-
-        if (selectedEvent) {
-            fetchContacts();
-        }
-    }, [selectedEvent]);
+    const loading = volunteersLoading || mentorsLoading || judgesLoading;
 
     return (<div className="bg-white p-6 rounded-lg shadow-md max-w-2xl mx-auto">
       <h2 className="text-2xl font-semibold text-gray-800 mb-6">Event Contacts</h2>
@@ -57,7 +35,7 @@ export const ContactsTab = () => {
               {loading ? (
                 <div className="p-2">Loading...</div>
               ) : (
-                volunteers.map((volunteer) => (
+                volunteers?.map((volunteer) => (
                   <div key={volunteer.contact_id} className="p-2 border-b hover:bg-gray-50">
                     {volunteer.contact_first_name} {volunteer.contact_last_name}
                   </div>
@@ -89,7 +67,7 @@ export const ContactsTab = () => {
               {loading ? (
                 <div className="p-2">Loading...</div>
               ) : (
-                mentors.map((mentor) => (
+                mentors?.map((mentor) => (
                   <div key={mentor.contact_id} className="p-2 border-b hover:bg-gray-50">
                     {mentor.contact_first_name} {mentor.contact_last_name}
                   </div>
@@ -121,7 +99,7 @@ export const ContactsTab = () => {
               {loading ? (
                 <div className="p-2">Loading...</div>
               ) : (
-                judges.map((judge) => (
+                judges?.map((judge) => (
                   <div key={judge.contact_id} className="p-2 border-b hover:bg-gray-50">
                     {judge.contact_first_name} {judge.contact_last_name}
                   </div>

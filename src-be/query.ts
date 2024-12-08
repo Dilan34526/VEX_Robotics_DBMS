@@ -274,8 +274,7 @@ SELECT DISTINCT c.*
 `;
 
 export const getMatchesByEventId = (eventId: string) => sql`
-SELECT m.*
-    FROM Match m
-        JOIN Registration r ON m.match_registration_id = r.registration_id
-    WHERE r.event_id = ${eventId};
+SELECT *
+    FROM Match
+    WHERE event_id = ${eventId};
 `;
