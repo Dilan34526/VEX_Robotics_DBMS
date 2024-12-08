@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { VdbRes, VdbMatch, VdbTeam, VdbMatchRaw, VdbJudge, VdbMentor, VdbVolunteer, VdbContact } from './types';
+import { VdbRes, VdbMatch, VdbTeam, VdbMatchRaw, VdbJudge, VdbMentor, VdbVolunteer, VdbContact, VdbAward } from './types';
 
 type VdbEvent = { event_id: number };
 
@@ -133,4 +133,16 @@ export const useContacts = (selectedEvent: VdbEvent | null) => {
     const judgesList = [...teamsByJudge.entries()].map(([judgeId, teams]) => ({...judgesById.get(judgeId)!, teams}));
 
     return { judges: judgesList, mentors: mentorsList, volunteers, loading: false };
+};
+
+export const useAwards = (selectedEvent: VdbEvent | null) => {
+    if (selectedEvent === null) {
+        return {awards: null, loading: true};
+    }
+
+    const { data: awards, loading } = useFetch<VdbAward[]>(
+        `//localhost:5174/event/${selectedEvent.event_id}/award`,
+    );
+
+    return { awards, loading };
 };

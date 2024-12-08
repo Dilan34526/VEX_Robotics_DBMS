@@ -7,9 +7,25 @@ export const ContactsTab = () => {
     const [selectedEvent, setSelectedEvent] = useAtom(selectedEventAtom);
     const { judges, mentors, volunteers, loading } = useContacts(selectedEvent);
 
-    return (<div className="bg-white p-6 rounded-lg shadow-md max-w-2xl mx-auto">
-      <h2 className="text-2xl font-semibold text-gray-800 mb-6">Event Contacts</h2>
-      <div className="space-y-6">
+    return (<div className="flex flex-col gap-8 bg-white p-6 rounded-lg shadow-md max-w-2xl mx-auto">
+      <h2 className="text-2xl font-semibold text-gray-800">Event contacts</h2>
+
+      <div>
+          <h3 className="text-lg font-medium text-gray-700 mb-3">Quick actions</h3> 
+          
+          <div className="grid grid-cols-3 gap-5">
+            <button className="w-full bg-yellow-500 text-white p-2 rounded-md hover:bg-yellow-600">
+              Find underperforming volunteers
+            </button>
+            <button className="w-full bg-purple-500 text-white p-2 rounded-md hover:bg-purple-600">
+              List mentors judging same team
+            </button>
+            <button className="w-full bg-green-500 text-white p-2 rounded-md hover:bg-green-600">
+              Find triple impact contributors
+            </button>
+          </div>
+        </div>
+
         {/* Volunteers Section */}
         <div>
           <h3 className="text-lg font-medium text-gray-700 mb-3">Volunteers</h3>
@@ -24,9 +40,6 @@ export const ContactsTab = () => {
                 Add
               </button>
             </div>
-            <button className="w-full bg-yellow-500 text-white p-2 rounded-md hover:bg-yellow-600">
-              Find Underperforming Volunteers
-            </button>
             <div className="border rounded-md max-h-48 overflow-y-auto">
               {loading ? (
                 <div className="p-2">Loading...</div>
@@ -56,9 +69,6 @@ export const ContactsTab = () => {
               </button>
             </div>
             {/* New Button for Mentor-Judge Same Team */}
-            <button className="w-full bg-purple-500 text-white p-2 rounded-md hover:bg-purple-600">
-              List Mentors Judging Same Team
-            </button>
             <div className="border rounded-md max-h-48 overflow-y-auto">
               {loading ? (
                 <div className="p-2">Loading...</div>
@@ -89,9 +99,6 @@ export const ContactsTab = () => {
               </button>
             </div>
             {/* New Button for Triple Impact */}
-            <button className="w-full bg-green-500 text-white p-2 rounded-md hover:bg-green-600">
-              Find Triple Impact Contributors
-            </button>
             <div className="border rounded-md max-h-48 overflow-y-auto">
               {loading ? (
                 <div className="p-2">Loading...</div>
@@ -105,7 +112,6 @@ export const ContactsTab = () => {
               )}
             </div>
           </div>
-        </div>
       </div>
     </div>);
 };
