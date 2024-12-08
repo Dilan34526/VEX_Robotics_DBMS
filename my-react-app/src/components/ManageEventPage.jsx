@@ -4,7 +4,7 @@ import TeamsTab from '../tabs/TeamsTab';
 import ContactsTab from '../tabs/ContactsTab';
 import MatchesTab from '../tabs/MatchesTab';
 
-const NextPage = () => {
+export const ManageEventPage = () => {
   const [activeTab, setActiveTab] = useState('awards');
 
   const renderTabContent = () => {
@@ -59,5 +59,3 @@ const NextPage = () => {
     </div>
   );
 };
-
-export default NextPage;

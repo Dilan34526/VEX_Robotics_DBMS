@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import VexRoboticsLayout from './components/VexRoboticsLayout';
-import NextPage from './components/NextPage';
+import { VexRoboticsLayout } from './components/VexRoboticsLayout';
+import { ManageEventPage } from './components/ManageEventPage';
 import "./App.css"
 
 function App() {
@@ -9,7 +8,7 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<VexRoboticsLayout />} />
-        <Route path="/next-page" element={<NextPage />} />
+        <Route path="/next-page" element={<ManageEventPage />} />
       </Routes>
     </Router>
   );

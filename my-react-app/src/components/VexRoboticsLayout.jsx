@@ -1,24 +1,42 @@
-import React, { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const VexRoboticsLayout = () => {
+export const VexRoboticsLayout = () => {
   const [selectedSeason, setSelectedSeason] = useState('');
   const [selectedEvent, setSelectedEvent] = useState('');
+  const [seasons, setSeasons] = useState([]);
+  const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  // Sample data - replace with your actual seasons and events
-  const seasons = ['2023-2024', '2022-2023', '2021-2022'];
-  const events = [
-    'VEX Robotics World Championship',
-    'Signature Event',
-    'Regional Championship',
-    'Tournament',
-    'League Event'
-  ];
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const seasonsResponse = await fetch('//localhost:5174/season');
+        const seasonsData = await seasonsResponse.json();
+        setSeasons(seasonsData.data);
+
+        const eventsResponse = await fetch('//localhost:5174/event');
+        const eventsData = await eventsResponse.json();
+        setEvents(eventsData.data);
+
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const handleNextPage = () => {
     navigate('/next-page');
   };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -44,8 +62,8 @@ const VexRoboticsLayout = () => {
             >
               <option value="">Choose a season</option>
               {seasons.map((season) => (
-                <option key={season} value={season}>
-                  {season}
+                <option key={season.season_year} value={season.season_year}>
+                  {season.season_name}
                 </option>
               ))}
             </select>
@@ -63,11 +81,13 @@ const VexRoboticsLayout = () => {
                 className="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               >
                 <option value="">Choose an event</option>
-                {events.map((event) => (
-                  <option key={event} value={event}>
-                    {event}
-                  </option>
-                ))}
+                {events
+                  .filter((event) => event.event_season_year === parseInt(selectedSeason))
+                  .map((event) => (
+                    <option key={event.event_id} value={event.event_id}>
+                      {event.event_name}
+                    </option>
+                  ))}
               </select>
             </div>
           )}
@@ -99,5 +119,3 @@ const VexRoboticsLayout = () => {
     </div>
   );
 };
-
-export default VexRoboticsLayout;

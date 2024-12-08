@@ -1,5 +1,5 @@
 import express from "express";
-import { initialize, reset } from "@/query";
+import { getEvents, initialize, reset } from "@/query";
 import { wrapAsyncErrors } from "@/middleware";
 
 import { season } from "./season";
@@ -29,3 +29,13 @@ root.post("/reset",
 );
 
 root.use("/season", season);
+root.get("/event",
+    wrapAsyncErrors(
+        async (req, res) => {
+            res.json({
+                error: false,
+                data: await getEvents(),
+            });
+        },
+    ),
+);

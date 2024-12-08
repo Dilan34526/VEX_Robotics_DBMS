@@ -18,7 +18,7 @@ season.put("/add",
     ),
 );
 
-season.get("/get",
+season.get("/",
     wrapAsyncErrors(
         async (req, res) => {
             res.json({

@@ -232,3 +232,8 @@ export const getSeasons = () => sql`
 SELECT *
     FROM Season;
 `;
+
+export const getEvents = () => sql`
+SELECT *
+    FROM Event;
+`;
