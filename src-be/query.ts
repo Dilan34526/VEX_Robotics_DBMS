@@ -239,9 +239,9 @@ SELECT *
 `;
 
 export const getTeamsByEventId = (eventId: string) => sql`
-SELECT t.*
-    FROM team t
-        JOIN Registration r ON t.team_id = r.team_id
+SELECT t.*, r.judge_contact_id, r.judge_notebook_score, r.judge_hours
+    FROM Registration r
+        JOIN Team t ON t.team_id = r.team_id
     WHERE r.event_id = ${eventId};
 `;
 
@@ -259,7 +259,7 @@ SELECT DISTINCT c.*
 `;
 
 export const getMentorsByEventId = (eventId: string) => sql`
-SELECT DISTINCT c.*
+SELECT DISTINCT c.*, m.team_id
     FROM Mentors m
         JOIN Contact c ON m.mentor_contact_id = c.contact_id
         JOIN Registration r ON m.team_id = r.team_id

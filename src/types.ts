@@ -29,7 +29,11 @@ export type VdbEvent = {
 export type VdbTeam = {
     team_id: number,
     team_name: string,
-    team_number: number,
+    team_organization: string,
+    team_location: string,
+    judge_contact_id: number,
+    judge_notebook_score: number,
+    judge_hours: number,
 };
 
 export type VdbAward = {

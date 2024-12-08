@@ -1,15 +1,11 @@
 import React from 'react';
 import { useAtom } from 'jotai';
 import { selectedEventAtom } from '../../store';
-import { useJudges, useMentors, useVolunteers } from '../../hooks';
+import { useContacts, useJudges, useMentors, useVolunteers } from '../../hooks';
 
 export const ContactsTab = () => {
     const [selectedEvent, setSelectedEvent] = useAtom(selectedEventAtom);
-    const { volunteers, loading: volunteersLoading } = useVolunteers(selectedEvent);
-    const { mentors, loading: mentorsLoading } = useMentors(selectedEvent);  
-    const { judges, loading: judgesLoading } = useJudges(selectedEvent);
-
-    const loading = volunteersLoading || mentorsLoading || judgesLoading;
+    const { judges, mentors, volunteers, loading } = useContacts(selectedEvent);
 
     return (<div className="bg-white p-6 rounded-lg shadow-md max-w-2xl mx-auto">
       <h2 className="text-2xl font-semibold text-gray-800 mb-6">Event Contacts</h2>
@@ -68,8 +64,9 @@ export const ContactsTab = () => {
                 <div className="p-2">Loading...</div>
               ) : (
                 mentors?.map((mentor) => (
-                  <div key={mentor.contact_id} className="p-2 border-b hover:bg-gray-50">
-                    {mentor.contact_first_name} {mentor.contact_last_name}
+                  <div key={mentor.contact_id} className="flex gap-2 items-center p-2 border-b hover:bg-gray-50">
+                    <span>{mentor.contact_first_name} {mentor.contact_last_name}</span>
+                    <span className="text-gray-500">({mentor.teams.map(team => team.team_id).join(', ')})</span>
                   </div>
                 ))
               )}
@@ -100,8 +97,9 @@ export const ContactsTab = () => {
                 <div className="p-2">Loading...</div>
               ) : (
                 judges?.map((judge) => (
-                  <div key={judge.contact_id} className="p-2 border-b hover:bg-gray-50">
-                    {judge.contact_first_name} {judge.contact_last_name}
+                  <div key={judge.contact_id} className="flex gap-2 items-center p-2 border-b hover:bg-gray-50">
+                    <span>{judge.contact_first_name} {judge.contact_last_name}</span>
+                    <span className="text-gray-500">({judge.teams.map(team => team.team_id).join(', ')})</span>
                   </div>
                 ))
               )}

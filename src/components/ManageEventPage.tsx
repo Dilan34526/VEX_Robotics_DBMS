@@ -7,11 +7,23 @@ import { VexRoboticsLayout } from './VexRoboticsLayout';
 import { useAtom } from 'jotai';
 import { selectedEventAtom } from '../store';
 import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 
 export const ManageEventPage = () => {
   const [activeTab, setActiveTab] = useState('awards');
   const [selectedEvent, setSelectedEvent] = useAtom(selectedEventAtom);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (selectedEvent === null) {
+      navigate('/');
+    }
+  }, []);
+
+
+  if (selectedEvent === null) {
+    return <VexRoboticsLayout />
+  }
 
   const renderTabContent = () => {
     switch(activeTab) {
@@ -27,12 +39,6 @@ export const ManageEventPage = () => {
         return null;
     }
   };
-
-
-  if (selectedEvent === null) {
-    navigate('/');
-    return <VexRoboticsLayout />
-  }
 
   return (
     <VexRoboticsLayout>
