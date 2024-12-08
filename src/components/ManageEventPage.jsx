@@ -3,6 +3,7 @@ import AwardsTab from '../tabs/AwardsTab';
 import TeamsTab from '../tabs/TeamsTab';
 import ContactsTab from '../tabs/ContactsTab';
 import MatchesTab from '../tabs/MatchesTab';
+import { VexRoboticsLayout } from './VexRoboticsLayout';
 
 export const ManageEventPage = () => {
   const [activeTab, setActiveTab] = useState('awards');
@@ -23,13 +24,7 @@ export const ManageEventPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <nav className="bg-white shadow-md p-4">
-        <div className="container mx-auto flex items-center">
-          <h1 className="text-xl font-bold text-gray-800">VEX Robotics DBMS</h1>
-        </div>
-      </nav>
-
+    <VexRoboticsLayout>
       <div className="container mx-auto mt-8 px-4">
         <div className="flex space-x-1 border-b">
           {[
@@ -56,6 +51,6 @@ export const ManageEventPage = () => {
           {renderTabContent()}
         </div>
       </div>
-    </div>
+    </VexRoboticsLayout>
   );
 };
