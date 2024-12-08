@@ -237,3 +237,10 @@ export const getEvents = () => sql`
 SELECT *
     FROM Event;
 `;
+
+export const getTeamsByEventId = (eventId: string) => sql`
+SELECT t.*
+    FROM team t
+        JOIN Registration r ON t.team_id = r.team_id
+    WHERE r.event_id = ${eventId};
+`;

@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import React,{ useState, useEffect, ReactNode } from 'react';
 
-export const VexRoboticsLayout = ({ children }) => {
+export const VexRoboticsLayout = ({ children }: { children?: ReactNode }) => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Navigation Bar */}

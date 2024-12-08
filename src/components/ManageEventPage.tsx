@@ -4,9 +4,14 @@ import TeamsTab from '../tabs/TeamsTab';
 import ContactsTab from '../tabs/ContactsTab';
 import MatchesTab from '../tabs/MatchesTab';
 import { VexRoboticsLayout } from './VexRoboticsLayout';
+import { useAtom } from 'jotai';
+import { selectedEventAtom } from '../store';
+import { useNavigate } from 'react-router-dom';
 
 export const ManageEventPage = () => {
   const [activeTab, setActiveTab] = useState('awards');
+  const [selectedEvent, setSelectedEvent] = useAtom(selectedEventAtom);
+  const navigate = useNavigate();
 
   const renderTabContent = () => {
     switch(activeTab) {
@@ -23,9 +28,16 @@ export const ManageEventPage = () => {
     }
   };
 
+
+  if (selectedEvent === null) {
+    navigate('/');
+    return <VexRoboticsLayout />
+  }
+
   return (
     <VexRoboticsLayout>
       <div className="container mx-auto mt-8 px-4">
+        <h2 className="text-2xl font-bold mb-4">{selectedEvent!.event_name ?? ''}</h2>
         <div className="flex space-x-1 border-b">
           {[
             { id: 'awards', label: 'Awards' },

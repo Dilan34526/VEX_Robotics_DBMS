@@ -3,6 +3,7 @@ import { getEvents, initialize, reset } from "@/query";
 import { wrapAsyncErrors } from "@/middleware";
 
 import { season } from "./season";
+import { team } from "./team";
 
 export const root = express.Router();
 root.post("/create",
@@ -29,6 +30,7 @@ root.post("/reset",
 );
 
 root.use("/season", season);
+root.use("/team", team);
 root.get("/event",
     wrapAsyncErrors(
         async (req, res) => {

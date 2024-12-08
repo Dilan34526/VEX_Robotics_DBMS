@@ -1,26 +1,30 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+
 import { VexRoboticsLayout } from './VexRoboticsLayout';
+import { VdbRes, VdbSeason, VdbEvent } from '../hooks/fetch';
+import { selectedEventAtom } from '../store';
+import { useAtom } from 'jotai';
 
 export const LaunchPage = () => {
-  const [seasons, setSeasons] = useState([]);
-  const [events, setEvents] = useState([]);
-  const [selectedSeason, setSelectedSeason] = useState('');
-  const [selectedEvent, setSelectedEvent] = useState('');
+  const [seasons, setSeasons] = useState<VdbSeason[]>([]);
+  const [events, setEvents] = useState<VdbEvent[]>([]);
+  const [selectedSeason, setSelectedSeason] = useState<VdbSeason | null>(null);
+  const [selectedEvent, setSelectedEvent] = useAtom(selectedEventAtom);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchSeasons = async () => {
       const response = await fetch('//localhost:5174/season');
-      const data = await response.json();
-      setSeasons(data.data);
+      const data: VdbRes<VdbSeason[]> = await response.json();
+      setSeasons(data.data!);
     };
 
     const fetchEvents = async () => {
       const response = await fetch('//localhost:5174/event');
-      const data = await response.json();
-      setEvents(data.data);
+      const data: VdbRes<VdbEvent[]> = await response.json();
+      setEvents(data.data!);
     };
 
     Promise.all([fetchSeasons(), fetchEvents()]).then(() => {
@@ -44,13 +48,20 @@ export const LaunchPage = () => {
               Select Season
             </label>
             <select
-              value={selectedSeason}
-              onChange={(e) => setSelectedSeason(e.target.value)}
+              value={selectedSeason?.season_year ?? ''}
+              onChange={(e) => {
+                const selectedSeasonYear = Number(e.target.value);
+                const season = seasons.find((s) => s.season_year === selectedSeasonYear);
+                setSelectedSeason(season!);
+              }}
               className="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             >
               <option value="">Choose a season</option>
               {seasons.map((season) => (
-                <option key={season.season_year} value={season.season_year}>
+                <option
+                  key={season.season_year}
+                  value={season.season_year}
+                >
                   {season.season_name}
                 </option>
               ))}
@@ -64,13 +75,17 @@ export const LaunchPage = () => {
                 Select Event
               </label>
               <select
-                value={selectedEvent}
-                onChange={(e) => setSelectedEvent(e.target.value)}
+                value={selectedEvent?.event_id ?? ''}
+                onChange={(e) => {
+                  const selectedEventId = Number(e.target.value);
+                  const event = events.find((ev) => ev.event_id === selectedEventId);
+                  setSelectedEvent(event!);
+                }}
                 className="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               >
                 <option value="">Choose an event</option>
                 {events
-                  .filter((event) => event.event_season_year === parseInt(selectedSeason))
+                  .filter((event) => event.event_season_year === selectedSeason.season_year)
                   .map((event) => (
                     <option key={event.event_id} value={event.event_id}>
                       {event.event_name}
