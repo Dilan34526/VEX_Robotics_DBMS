@@ -1,6 +1,6 @@
 import React from 'react';
 
-const MatchesTab = () => {
+export const MatchesTab = () => {
     return (
         <div className="bg-white p-6 rounded-lg shadow-md max-w-2xl mx-auto">
           <h2 className="text-2xl font-semibold text-gray-800 mb-6">Matches</h2>
@@ -24,6 +24,4 @@ const MatchesTab = () => {
         </div>
       );
 };
-
-export default MatchesTab;
 

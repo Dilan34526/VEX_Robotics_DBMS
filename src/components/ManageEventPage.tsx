@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import AwardsTab from './tabs/AwardsTab';
-import TeamsTab from './tabs/TeamsTab';
-import ContactsTab from './tabs/ContactsTab';
-import MatchesTab from './tabs/MatchesTab';
+import {AwardsTab} from './tabs/AwardsTab';
+import {TeamsTab} from './tabs/TeamsTab';
+import {ContactsTab} from './tabs/ContactsTab';
+import {MatchesTab} from './tabs/MatchesTab';
 import { VexRoboticsLayout } from './VexRoboticsLayout';
 import { useAtom } from 'jotai';
 import { selectedEventAtom } from '../store';

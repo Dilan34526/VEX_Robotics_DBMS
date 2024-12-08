@@ -1,9 +1,9 @@
 import express from "express";
-import { getEvents, initialize, reset } from "@/query";
+import { initialize, reset } from "@/query";
 import { wrapAsyncErrors } from "@/middleware";
 
 import { season } from "./season";
-import { team } from "./team";
+import { event } from "./event";
 
 export const root = express.Router();
 root.post("/create",
@@ -30,14 +30,4 @@ root.post("/reset",
 );
 
 root.use("/season", season);
-root.use("/team", team);
-root.get("/event",
-    wrapAsyncErrors(
-        async (req, res) => {
-            res.json({
-                error: false,
-                data: await getEvents(),
-            });
-        },
-    ),
-);
+root.use("/event", event);

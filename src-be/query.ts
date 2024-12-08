@@ -244,3 +244,38 @@ SELECT t.*
         JOIN Registration r ON t.team_id = r.team_id
     WHERE r.event_id = ${eventId};
 `;
+
+export const getAwardsByEventId = (eventId: string) => sql`
+SELECT *
+    FROM Award
+    WHERE award_event_id = ${eventId};
+`;
+
+export const getVolunteersByEventId = (eventId: string) => sql`
+SELECT DISTINCT c.*
+    FROM Volunteers v
+        JOIN Contact c ON v.volunteer_contact_id = c.contact_id
+    WHERE v.event_id = ${eventId};  
+`;
+
+export const getMentorsByEventId = (eventId: string) => sql`
+SELECT DISTINCT c.*
+    FROM Mentors m
+        JOIN Contact c ON m.mentor_contact_id = c.contact_id
+        JOIN Registration r ON m.team_id = r.team_id
+    WHERE r.event_id = ${eventId};
+`;
+
+export const getJudgesByEventId = (eventId: string) => sql`  
+SELECT DISTINCT c.*
+    FROM Registration r
+        JOIN Contact c ON r.judge_contact_id = c.contact_id
+    WHERE r.event_id = ${eventId};
+`;
+
+export const getMatchesByEventId = (eventId: string) => sql`
+SELECT m.*
+    FROM Match m
+        JOIN Registration r ON m.match_registration_id = r.registration_id
+    WHERE r.event_id = ${eventId};
+`;

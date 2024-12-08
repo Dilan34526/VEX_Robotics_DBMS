@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { VexRoboticsLayout } from './VexRoboticsLayout';
-import { VdbRes, VdbSeason, VdbEvent } from '../hooks/fetch';
+import { VdbRes, VdbSeason, VdbEvent } from '../types';
 import { selectedEventAtom } from '../store';
 import { useAtom } from 'jotai';
 

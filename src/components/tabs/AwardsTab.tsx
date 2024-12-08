@@ -1,6 +1,6 @@
 import React from 'react';
 
-const AwardsTab = () => {
+export const AwardsTab = () => {
     return (<div className="bg-white p-6 rounded-lg shadow-md max-w-2xl mx-auto">
       <h2 className="text-2xl font-semibold text-gray-800 mb-6">Awards</h2>
       <div className="space-y-6">
@@ -37,6 +37,3 @@ const AwardsTab = () => {
       </div>
     </div>);
 };
-
-export default AwardsTab;
-

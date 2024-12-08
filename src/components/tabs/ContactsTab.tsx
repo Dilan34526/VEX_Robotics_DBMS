@@ -1,6 +1,38 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { useAtom } from 'jotai';
+import { selectedEventAtom } from '../../store';
+import { VdbRes, VdbContact } from '../../types';
 
-const ContactsTab = () => {
+export const ContactsTab = () => {
+    const [selectedEvent, setSelectedEvent] = useAtom(selectedEventAtom);
+    const [volunteers, setVolunteers] = useState<VdbContact[]>([]);
+    const [mentors, setMentors] = useState<VdbContact[]>([]);
+    const [judges, setJudges] = useState<VdbContact[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchContacts = async () => {
+            const [volunteersRes, mentorsRes, judgesRes] = await Promise.all([
+                fetch(`//localhost:5174/event/${selectedEvent?.event_id}/volunteer`),
+                fetch(`//localhost:5174/event/${selectedEvent?.event_id}/mentor`),
+                fetch(`//localhost:5174/event/${selectedEvent?.event_id}/judge`)
+            ]);
+
+            const volunteersData: VdbRes<VdbContact[]> = await volunteersRes.json();
+            const mentorsData: VdbRes<VdbContact[]> = await mentorsRes.json();
+            const judgesData: VdbRes<VdbContact[]> = await judgesRes.json();
+
+            setVolunteers(volunteersData.data!);
+            setMentors(mentorsData.data!);
+            setJudges(judgesData.data!);
+            setLoading(false);
+        };
+
+        if (selectedEvent) {
+            fetchContacts();
+        }
+    }, [selectedEvent]);
+
     return (<div className="bg-white p-6 rounded-lg shadow-md max-w-2xl mx-auto">
       <h2 className="text-2xl font-semibold text-gray-800 mb-6">Event Contacts</h2>
       <div className="space-y-6">
@@ -22,11 +54,15 @@ const ContactsTab = () => {
               Find Underperforming Volunteers
             </button>
             <div className="border rounded-md max-h-48 overflow-y-auto">
-              {[1,2,3].map((i) => (
-                <div key={i} className="p-2 border-b hover:bg-gray-50">
-                  Volunteer {i}
-                </div>
-              ))}
+              {loading ? (
+                <div className="p-2">Loading...</div>
+              ) : (
+                volunteers.map((volunteer) => (
+                  <div key={volunteer.contact_id} className="p-2 border-b hover:bg-gray-50">
+                    {volunteer.contact_first_name} {volunteer.contact_last_name}
+                  </div>
+                ))
+              )}
             </div>
           </div>
         </div>
@@ -50,11 +86,15 @@ const ContactsTab = () => {
               List Mentors Judging Same Team
             </button>
             <div className="border rounded-md max-h-48 overflow-y-auto">
-              {[1,2,3].map((i) => (
-                <div key={i} className="p-2 border-b hover:bg-gray-50">
-                  Mentor {i}
-                </div>
-              ))}
+              {loading ? (
+                <div className="p-2">Loading...</div>
+              ) : (
+                mentors.map((mentor) => (
+                  <div key={mentor.contact_id} className="p-2 border-b hover:bg-gray-50">
+                    {mentor.contact_first_name} {mentor.contact_last_name}
+                  </div>
+                ))
+              )}
             </div>
           </div>
         </div>
@@ -78,17 +118,18 @@ const ContactsTab = () => {
               Find Triple Impact Contributors
             </button>
             <div className="border rounded-md max-h-48 overflow-y-auto">
-              {[1,2,3].map((i) => (
-                <div key={i} className="p-2 border-b hover:bg-gray-50">
-                  Judge {i}
-                </div>
-              ))}
+              {loading ? (
+                <div className="p-2">Loading...</div>
+              ) : (
+                judges.map((judge) => (
+                  <div key={judge.contact_id} className="p-2 border-b hover:bg-gray-50">
+                    {judge.contact_first_name} {judge.contact_last_name}
+                  </div>
+                ))
+              )}
             </div>
           </div>
         </div>
       </div>
     </div>);
 };
-
-export default ContactsTab;
-
