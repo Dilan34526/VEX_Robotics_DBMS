@@ -1,5 +1,5 @@
 import express from "express";
-import { getSeasons, getTripleImpactContributor, insertSeason, getStingiestJudge, getVolunteersBySeason } from "@/query";
+import { getSeasons, getStingiestJudge, getTripleImpactContributor, getVolunteersBySeason, insertSeason } from "@/query";
 import { requireBodyParams, wrapAsyncErrors } from "@/middleware";
 
 export const season = express.Router();

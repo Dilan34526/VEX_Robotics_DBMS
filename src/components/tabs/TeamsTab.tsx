@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { useTeams } from '../../hooks';
+import { clearCache, useTeams } from '../../hooks';
 import { Card } from '../Card';
 import { VdbEvent } from '../../types';
 
 export const TeamsTab = ({ event }: { event: VdbEvent }) => {
     const [searchQuery, setSearchQuery] = useState('');
-    const { teams, loading, setTeams } = useTeams(event, searchQuery);
+    const { teams, loading, setTeams } = useTeams(event);
 
     const deleteTeam = async (teamId: string) => {
         if (event === null) return;
@@ -15,6 +15,7 @@ export const TeamsTab = ({ event }: { event: VdbEvent }) => {
         });
 
         setTeams(teams!.filter(team => team.team_id !== teamId));
+        clearCache();
     };
 
     return (

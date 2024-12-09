@@ -9,14 +9,14 @@ export const AwardsTab = ({ event }: { event: VdbEvent }) => {
   return (<Card>
     <div className="space-y-6">
       {/* Award Buttons */}
-      <div className="flex flex-col gap-3">
+      {/* <div className="flex flex-col gap-3">
         <button className="w-full bg-blue-500 text-white p-3 rounded-md hover:bg-blue-600 font-medium">
           Assign Tournament Champion
         </button>
         <button className="w-full bg-green-500 text-white p-3 rounded-md hover:bg-green-600 font-medium">
           Assign Judges Award
         </button>
-      </div>
+      </div> */}
 
       {/* Awards List */}
       <div className="border rounded-md">

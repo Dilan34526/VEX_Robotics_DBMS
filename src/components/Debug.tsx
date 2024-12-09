@@ -2,29 +2,36 @@ import React, { useState } from "react";
 import { VexRoboticsLayout } from "./VexRoboticsLayout";
 import { VdbRes } from "../types";
 
-export const Debug = () => {
+export const Debug = ({onReset, onFinish}: {onReset: () => void, onFinish: () => void}) => {
     const [working, setWorking] = useState(false);
     const [done, setDone] = useState(false);
 
     const initializeDb = async () => {
+        setDone(false);
         setWorking(true);
+        onReset();
         try {
             const response = await fetch("//localhost:5174/debug/initialize", {method: "POST"});
             const data: VdbRes<null> = await response.json();
             setDone(!data.error);
+            onFinish();
         } catch (e) {
             setDone(false);
         } finally {
             setWorking(false);
         }
+
     };
 
     const resetDb = async () => {
+        setDone(false);
         setWorking(true);
+        onReset();
         try {
             const response = await fetch("//localhost:5174/debug/reset", {method: "POST"});
             const data: VdbRes<null> = await response.json();
             setDone(!data.error);
+            onFinish();
         } catch (e) {
             setDone(false);
         } finally {

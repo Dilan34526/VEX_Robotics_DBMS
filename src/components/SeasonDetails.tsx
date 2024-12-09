@@ -75,6 +75,7 @@ export const SeasonDetails = ({
       </div>
 
       <div className="mt-8">
+        <h3 className="text-lg font-bold text-gray-700 mb-4">Volunteers</h3>
         <label className="flex items-center gap-2">
           <input
             type="checkbox"

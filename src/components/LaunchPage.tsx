@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 
 import { VexRoboticsLayout } from './VexRoboticsLayout';
 import { VdbRes, VdbSeason, VdbEvent } from '../types';
-import { useAtom } from 'jotai';
 import { Debug } from './Debug';
 import { SeasonDetails } from './SeasonDetails';
 import { EventDetails } from './EventDetails';
@@ -15,7 +14,7 @@ export const LaunchPage = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
+  const fetchData = async () => {
     const fetchSeasons = async () => {
       const response = await fetch('//localhost:5174/season');
       const data: VdbRes<VdbSeason[]> = await response.json();
@@ -31,6 +30,10 @@ export const LaunchPage = () => {
     Promise.all([fetchSeasons(), fetchEvents()]).then(() => {
       setLoading(false);
     });
+  };
+
+  useEffect(() => {
+    fetchData();
   }, []);
 
   useEffect(() => {
@@ -45,7 +48,17 @@ export const LaunchPage = () => {
         <div className="max-w-2xl mx-auto space-y-6">
         <div className="space-y-2">
           <h3 className="text-lg font-medium text-gray-700 mb-3">Debug</h3>
-          <Debug />
+          <Debug
+            onReset={() => {
+              setSelectedSeason(null);
+              setSeasons([]);
+              setEvents([]);
+            }}
+
+            onFinish={() => {
+              fetchData();
+            }}
+          />
         </div>
 
 
