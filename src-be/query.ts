@@ -354,7 +354,7 @@ SELECT t.team_id, t.team_name
             FROM Registration r
             WHERE r.event_id = ${eventId}
     )
-        AND LOWER(t.team_name) LIKE LOWER(${query});
+        AND LOWER(t.team_name) LIKE ${`%${query.toLowerCase()}%`};
 `;
 
 export const insertTeamIntoEvent = (teamId: string, eventId: number) => sql`
