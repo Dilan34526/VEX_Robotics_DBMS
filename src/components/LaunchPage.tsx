@@ -6,6 +6,9 @@ import { VdbRes, VdbSeason, VdbEvent } from '../types';
 import { selectedEventAtom } from '../store';
 import { useAtom } from 'jotai';
 import { useCachedFetch, useTripleImpactContributor } from '../hooks';
+import { ManageEvent } from './ManageEvent';
+import { Card } from './Card';
+import { Debug } from './Debug';
 
 
 
@@ -36,9 +39,9 @@ export const LaunchPage = () => {
     });
   }, []);
 
-  const handleNextPage = () => {
-    navigate('/manage-event');
-  };
+  useEffect(() => {
+    setSelectedEvent(null);
+  }, [selectedSeason]);
 
   return (
     <VexRoboticsLayout>
@@ -46,6 +49,12 @@ export const LaunchPage = () => {
         <div className="text-center">Loading...</div>
       ) : (
         <div className="max-w-2xl mx-auto space-y-6">
+        <div className="space-y-2">
+          <h3 className="text-lg font-medium text-gray-700 mb-3">Debug</h3>
+          <Debug />
+        </div>
+
+
           {/* Season Selection */}
           <div className="space-y-2">
             <h3 className="text-lg font-medium text-gray-700 mb-3">Season</h3>
@@ -71,25 +80,37 @@ export const LaunchPage = () => {
           </div>
           
           {selectedSeason && (
-            <>
-              <h4 className="text-md font-medium text-gray-700 mb-3">Season quick stats</h4>
-              <div className="grid grid-cols-2 gap-4 items-center" style={{gridTemplateColumns: '1fr 3fr'}}>
-                <h5 className="text-sm font-medium text-gray-700 mb-3">Triple impact contributor</h5>
-                {tripleImpactContributorLoading ? (
-                  <div className="flex gap-2 items-center space-y-2 ">Loading...</div>
-                ) : (
-                  tripleImpactContributor && (
+            <Card>
+              <div className="grid grid-cols-3 gap-4 items-center justify-items-center">
+                  <h3 className="text-lg font-bold text-gray-700">Triple impact contributor</h3>
+                  {tripleImpactContributorLoading ? (
+                    <div>Loading...</div>
+                  ) : (
+                    tripleImpactContributor
+                      ?  (
+                        <div>
+                          {tripleImpactContributor.contact_first_name} {tripleImpactContributor.contact_last_name} 
+                        </div>
+                      )
+                      : (
+                        <div>No contacts qualify</div>
+                      )
+                  )}
+                {
+                  !tripleImpactContributorLoading && tripleImpactContributor && (
                     <div className="flex gap-2 items-center space-y-2 ">
-                      {tripleImpactContributor.contact_first_name} {tripleImpactContributor.contact_last_name} 
-                      <span className="text-sm text-gray-500">({tripleImpactContributor.total_hours} h = {tripleImpactContributor.volunteer_hours} volunteer + {tripleImpactContributor.mentor_hours} mentor + {tripleImpactContributor.judge_hours} judge)</span>
+                      <span className="text-sm text-gray-500">
+                        {tripleImpactContributor.total_hours} h
+                        <br />
+                        = {tripleImpactContributor.volunteer_hours} volunteer + {tripleImpactContributor.mentor_hours} mentor + {tripleImpactContributor.judge_hours} judge
+                      </span>
                     </div>
                   )
-                )}
+                }
               </div>
-            </>
+            </Card>
           )}
 
-          {/* Event Selection - Only shown if season is selected */}
           {selectedSeason && (
             <div className="space-y-2">
               <h3 className="text-lg font-medium text-gray-700 mb-3">Event</h3>
@@ -114,27 +135,8 @@ export const LaunchPage = () => {
             </div>
           )}
 
-          {/* Next Page Button */}
           {selectedSeason && selectedEvent && (
-            <div className="flex justify-end mt-6">
-              <button
-                onClick={handleNextPage}
-                className="inline-flex items-center pl-4 pr-2 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-              >
-                Next
-                <svg
-                  className="ml-2 h-5 w-5"
-                  fill="none"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path d="M9 5l7 7-7 7" />
-                </svg>
-              </button>
-            </div>
+            <ManageEvent />
           )}
         </div>
       )}

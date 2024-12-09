@@ -8,6 +8,8 @@ app.use(express.json()); // allow request bodies
 
 app.use(rootRouter);
 
+app.use(express.static("../src/dist/"));
+
 app.listen(5174, () => {
     console.log("listening");
 });

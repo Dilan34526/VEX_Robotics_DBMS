@@ -2,13 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { useAtom } from 'jotai';
 import { selectedEventAtom } from '../../store';
 import { useAwards } from '../../hooks';
+import { Card } from '../Card';
 
 export const AwardsTab = () => {
   const [selectedEvent, setSelectedEvent] = useAtom(selectedEventAtom);
   const { awards, loading,  flushCache } = useAwards(selectedEvent);
 
-  return (<div className="bg-white p-6 rounded-lg shadow-md max-w-2xl mx-auto">
-    <h2 className="text-2xl font-semibold text-gray-800 mb-6">Awards</h2>
+  return (<Card>
     <div className="space-y-6">
       {/* Award Buttons */}
       <div className="flex flex-col gap-3">
@@ -38,9 +38,9 @@ export const AwardsTab = () => {
                     &#x2192;
                     <span>{award.award_qualification}</span>
                   </div>
-                  <button className="text-red-500 hover:text-red-700">
+                  {/* <button className="text-red-500 hover:text-red-700">
                     Remove
-                  </button>
+                  </button> */}
                 </div>
               </div>
             ))
@@ -48,5 +48,5 @@ export const AwardsTab = () => {
         </div>
       </div>
     </div>
-  </div>);
+  </Card>);
 };

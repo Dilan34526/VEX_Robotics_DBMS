@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useAtom } from 'jotai';
 import { selectedEventAtom } from '../../store';
 import { useContacts, useJudges, useMentors, useVolunteers } from '../../hooks';
+import { Card } from '../Card';
 
 export const ContactsTab = () => {
     const [selectedEvent, setSelectedEvent] = useAtom(selectedEventAtom);
@@ -13,9 +14,7 @@ export const ContactsTab = () => {
 
     const filteredVolunteers = volunteers?.filter((volunteer) => !filterUnderperforming || volunteer.hours < 40) ?? [];
 
-    return (<div className="flex flex-col gap-8 bg-white p-6 rounded-lg shadow-md max-w-2xl mx-auto">
-      <h2 className="text-2xl font-semibold text-gray-800">Event contacts</h2>
-
+    return (<Card>
       <div>
           <h3 className="text-lg font-medium text-gray-700 mb-3">Quick actions</h3> 
           
@@ -129,5 +128,5 @@ export const ContactsTab = () => {
             </div>
           </div>
       </div>
-    </div>);
+    </Card>);
 };

@@ -11,7 +11,7 @@ export const VexRoboticsLayout = ({ children }: { children?: ReactNode }) => {
       </nav>
 
       {/* Main Content */}
-      <main className="container mx-auto mt-8 px-4">
+      <main className="container mx-auto mt-8 px-4 pb-20">
         {children}
       </main>
     </div>

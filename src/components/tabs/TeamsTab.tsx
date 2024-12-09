@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useAtom } from 'jotai';
 import { selectedEventAtom } from '../../store';
 import { clearCache, useTeams } from '../../hooks';
+import { Card } from '../Card';
 
 export const TeamsTab = () => {
     const [selectedEvent, setSelectedEvent] = useAtom(selectedEventAtom);
@@ -19,8 +20,7 @@ export const TeamsTab = () => {
     };
 
     return (
-    <div className="bg-white p-6 rounded-lg shadow-md max-w-2xl mx-auto">
-            <h2 className="text-2xl font-semibold text-gray-800 mb-6">Teams</h2>
+        <Card>
             <div className="space-y-4">
               <div className="flex gap-2">
                 <input
@@ -62,6 +62,6 @@ export const TeamsTab = () => {
                 </div>
               </div>
             </div>
-          </div>
+        </Card>
     );
 };

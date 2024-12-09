@@ -281,7 +281,8 @@ SELECT DISTINCT c.*, r.judge_hours
 export const getMatchesByEventId = (eventId: number) => sql`
 SELECT *
     FROM Match
-    WHERE event_id = ${eventId};
+    WHERE event_id = ${eventId}
+    ORDER BY match_time ASC;
 `;
 
 export const getTripleImpactContributor = async (seasonYear: number) => (await sql`
