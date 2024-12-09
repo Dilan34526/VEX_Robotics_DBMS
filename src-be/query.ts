@@ -335,3 +335,13 @@ SELECT c.*, AVG(r.judge_notebook_score) AS avg_score
     ORDER BY avg_score ASC
     LIMIT 1;
 `)[0];
+
+export const getVolunteersBySeason = async (seasonYear: number) => await sql`
+SELECT c.*, SUM(v.volunteer_hours) AS total_hours
+    FROM Volunteers v
+        JOIN Event e ON v.event_id = e.event_id
+        JOIN Contact c ON c.contact_id = v.volunteer_contact_id
+    WHERE e.event_season_year = ${seasonYear}  
+    GROUP BY c.contact_id
+    ORDER BY total_hours ASC;
+`;

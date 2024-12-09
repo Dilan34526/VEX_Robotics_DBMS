@@ -7,13 +7,11 @@ export const ContactsTab = ({ event }: { event: VdbEvent }) => {
     const [judgesSearch, setJudgesSearch] = useState('');
     const [mentorsSearch, setMentorsSearch] = useState('');
     const [volunteersSearch, setVolunteersSearch] = useState('');
-    const [filterUnderperforming, setFilterUnderperforming] = useState(false);
     const { judges, mentors, volunteers, loading } = useContacts(event, judgesSearch, mentorsSearch, volunteersSearch);
 
-    const filteredVolunteers = volunteers?.filter((volunteer) => !filterUnderperforming || volunteer.hours < 40) ?? [];
 
     return (<Card>
-      <div>
+      {/* <div>
           <h3 className="text-lg font-medium text-gray-700 mb-3">Quick actions</h3> 
           
           <div className="grid grid-cols-3 gap-5">
@@ -24,7 +22,7 @@ export const ContactsTab = ({ event }: { event: VdbEvent }) => {
               Find mentor award candidates
             </button>
           </div>
-        </div>
+        </div> */}
 
         {/* Volunteers Section */}
         <div>
@@ -38,26 +36,18 @@ export const ContactsTab = ({ event }: { event: VdbEvent }) => {
                 placeholder="Search volunteers..."
                 className="flex-1 p-2 border border-gray-300 rounded-md"
               />
-              <button className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
+              {/* <button className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
                 Add
-              </button>
+              </button> */}
             </div>
-            <label className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                checked={filterUnderperforming}
-                onChange={(e) => setFilterUnderperforming(e.target.checked)}
-              />
-              Show only underperforming
-            </label>
             <div className="border rounded-md max-h-48 overflow-y-auto">
               {loading ? (
                 <div className="p-2">Loading...</div>
               ) : (
-                filteredVolunteers?.map((volunteer) => (
+                volunteers?.map((volunteer) => (
                   <div key={volunteer.contact_id} className="flex gap-2 items-center p-2 border-b hover:bg-gray-50">
                     <span>{volunteer.contact_first_name} {volunteer.contact_last_name}</span>
-                    <span className={`text-gray-500 ${volunteer.hours < 40 ? 'text-red-500' : ''}`}>({volunteer.hours} h)</span>
+                    <span className="text-gray-500">({volunteer.hours} h)</span>
                   </div>
                 ))
               )}
@@ -77,9 +67,9 @@ export const ContactsTab = ({ event }: { event: VdbEvent }) => {
                 placeholder="Search mentors..."
                 className="flex-1 p-2 border border-gray-300 rounded-md"
               />
-              <button className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
+              {/* <button className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
                 Add
-              </button>
+              </button> */}
             </div>
             <div className="border rounded-md max-h-48 overflow-y-auto">
               {loading ? (
@@ -108,9 +98,9 @@ export const ContactsTab = ({ event }: { event: VdbEvent }) => {
                 placeholder="Search judges..."
                 className="flex-1 p-2 border border-gray-300 rounded-md"
               />
-              <button className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
+              {/* <button className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
                 Add
-              </button>
+              </button> */}
             </div>
             <div className="border rounded-md max-h-48 overflow-y-auto">
               {loading ? (

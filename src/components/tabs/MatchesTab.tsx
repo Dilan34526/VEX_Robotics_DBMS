@@ -9,9 +9,9 @@ export const MatchesTab = ({ event }: { event: VdbEvent }) => {
     return (
         <Card>
           <div className="space-y-4">
-            <button className="w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600">
+            {/* <button className="w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600">
               Schedule New Match
-            </button>
+            </button> */}
             <div className="border rounded-md">
               <div className="p-3 border-b bg-gray-50 font-medium">
                 Match Schedule

@@ -1,19 +1,22 @@
-import React from 'react';
-import { VdbSeason, VdbContact } from '../types';
+import React, { useState } from 'react';
 import { Card } from './Card';
-import { useTripleImpactContributor, useStingiestJudge } from '../hooks';
+import { useTripleImpactContributor, useStingiestJudge, useVolunteersBySeason } from '../hooks';
+import { VdbSeason } from '../types';
 
 export const SeasonDetails = ({ 
   selectedSeason, 
+}: {
+  selectedSeason: VdbSeason | null;
 }) => {
-    const { tripleImpactContributor, loading: tripleImpactContributorLoading } = useTripleImpactContributor(selectedSeason);
-    const { stingiestJudge, loading: stingiestJudgeLoading } = useStingiestJudge(selectedSeason);
+  const { tripleImpactContributor, loading: tripleImpactContributorLoading } = useTripleImpactContributor(selectedSeason);
+  const { stingiestJudge, loading: stingiestJudgeLoading } = useStingiestJudge(selectedSeason);
+  const { volunteersBySeason, loading: volunteersBySeasonLoading } = useVolunteersBySeason(selectedSeason);
+  const [filterUnderperforming, setFilterUnderperforming] = useState(false);
+  const filteredVolunteers = volunteersBySeason?.filter((volunteer) => !filterUnderperforming || parseFloat(volunteer.total_hours) < 40) ?? [];
 
   if (!selectedSeason) {
     return null;
   }
-
-  console.log(stingiestJudge);
 
   return (
     <Card>
@@ -69,6 +72,29 @@ export const SeasonDetails = ({
             </div>
           )
         }
+      </div>
+
+      <div className="mt-8">
+        <label className="flex items-center gap-2">
+          <input
+            type="checkbox"
+            checked={filterUnderperforming}
+            onChange={(e) => setFilterUnderperforming(e.target.checked)}
+          />
+          Show only underperforming (&lt; 40.00 h)
+        </label>
+        <div className="border rounded-md max-h-48 overflow-y-auto">
+          {volunteersBySeasonLoading ? (
+            <div className="p-2">Loading...</div>
+          ) : (
+            filteredVolunteers?.map((volunteer) => (
+              <div key={volunteer.contact_id} className="flex gap-2 items-center p-2 border-b hover:bg-gray-50">
+                <span>{volunteer.contact_first_name} {volunteer.contact_last_name}</span>
+                <span className={`text-gray-500 ${parseFloat(volunteer.total_hours) < 40 ? 'text-red-500' : ''}`}>({parseFloat(volunteer.total_hours).toFixed(2)} h)</span>
+              </div>
+            ))
+          )}
+        </div>
       </div>
     </Card>
   );

@@ -242,3 +242,11 @@ export const useStingiestJudge = (selectedSeason: VdbSeason | null) => {
 
     return { stingiestJudge, loading, flushCache };
 };
+
+export const useVolunteersBySeason = (selectedSeason: VdbSeason | null) => {
+    const { data: volunteersBySeason, loading, flushCache } = useCachedFetch<(VdbContact & { total_hours: string })[]>(
+        selectedSeason === null ? null : `//localhost:5174/season/${selectedSeason.season_year}/volunteers`,  
+    );
+
+    return { volunteersBySeason, loading, flushCache };
+};
