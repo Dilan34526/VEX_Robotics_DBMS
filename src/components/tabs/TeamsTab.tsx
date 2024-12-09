@@ -1,12 +1,22 @@
 import React, { useState } from 'react';
 import { useAtom } from 'jotai';
 import { selectedEventAtom } from '../../store';
-import { useTeams } from '../../hooks';
+import { clearCache, useTeams } from '../../hooks';
 
 export const TeamsTab = () => {
     const [selectedEvent, setSelectedEvent] = useAtom(selectedEventAtom);
     const [searchQuery, setSearchQuery] = useState('');
-    const { teams, loading } = useTeams(selectedEvent, searchQuery);
+    const { teams, loading, flushCache, setTeams } = useTeams(selectedEvent, searchQuery);
+
+    const deleteTeam = async (teamId: string) => {
+        if (selectedEvent === null) return;
+
+        await fetch(`//localhost:5174/event/${selectedEvent.event_id}/team/${teamId}`, {
+            method: 'DELETE',
+        });
+
+        setTeams(teams!.filter(team => team.team_id !== teamId));
+    };
 
     return (
     <div className="bg-white p-6 rounded-lg shadow-md max-w-2xl mx-auto">
@@ -39,7 +49,12 @@ export const TeamsTab = () => {
                             <span className="font-bold">{team.team_id}</span>
                             <span>{team.team_name}</span>
                           </div>
-                          <button className="text-red-500 hover:text-red-700">Remove</button>
+                          <button
+                            className="text-red-500 hover:text-red-700"
+                            onClick={() => deleteTeam(team.team_id)}
+                          >
+                            Unregister
+                          </button>
                         </div>
                       </div>
                     ))

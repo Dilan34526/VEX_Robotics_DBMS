@@ -1,5 +1,5 @@
 import express from "express";
-import { getTeamsByEventId, getAwardsByEventId, getVolunteersByEventId, getMentorsByEventId, getJudgesByEventId, getEvents, getMatchesByEventId } from "@/query";
+import { getTeamsByEventId, getAwardsByEventId, getVolunteersByEventId, getMentorsByEventId, getJudgesByEventId, getEvents, getMatchesByEventId, deleteRegistration } from "@/query";
 import { wrapAsyncErrors } from "@/middleware";
 
 export const event = express.Router();
@@ -23,6 +23,21 @@ event.get("/:eventId/team",
             res.json({
                 error: false,
                 data: await getTeamsByEventId(parseInt(eventId)),
+            });
+        }
+    )
+);
+
+event.delete("/:eventId/team/:teamId",
+    wrapAsyncErrors(
+        async (req, res) => {
+            const eventId = req.params.eventId as string;
+            const teamId = req.params.teamId as string;
+
+            await deleteRegistration(teamId, parseInt(eventId));
+
+            res.json({
+                error: false,
             });
         }
     )

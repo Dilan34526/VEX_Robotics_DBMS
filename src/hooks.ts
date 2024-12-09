@@ -4,6 +4,9 @@ import { VdbRes, VdbMatch, VdbTeam, VdbMatchRaw, VdbJudge, VdbMentor, VdbVolunte
 type VdbEvent = { event_id: number };
 
 const cache = new Map<string, any>();
+export const clearCache = () => {
+    cache.clear();
+};
 
 export const useCachedFetch = <O, T=O>(
     url: string | null, 
@@ -11,6 +14,28 @@ export const useCachedFetch = <O, T=O>(
 ) => {
     const [data, setData] = useState<T | null>(null);
     const [loading, setLoading] = useState(true);
+
+    const reload = async () => {
+        if (url === null) return;
+
+        setLoading(true);
+
+        const response = await fetch(url);
+        const responseData: VdbRes<O> = await response.json();
+        
+        const transformedData = transformData(responseData.data!);
+        cache.set(url, transformedData);
+        setData(transformedData);
+        setLoading(false);
+    };
+
+    const set = (data: T) => {
+        if (url === null) return;
+
+        cache.set(url, data);
+        setData(data);
+        setLoading(false);
+    };
 
     useEffect(() => {
         setLoading(true);
@@ -23,24 +48,22 @@ export const useCachedFetch = <O, T=O>(
             return;
         }
 
-        (async () => {
-            const response = await fetch(url);
-            const responseData: VdbRes<O> = await response.json();
-            
-            const transformedData = transformData(responseData.data!);
-            cache.set(url, transformedData);
-            setData(transformedData);
-            setLoading(false);
-        })();
+        reload();
     }, [url, transformData]);
 
-    return { data, loading };
+    const flushCache = () => {
+        if (url === null || !cache.has(url)) return Promise.resolve();
+
+        cache.delete(url);
+
+        return reload();
+    };
+
+    return { data, loading, flushCache, set };
 };
 
 export const useMatches = (selectedEvent: VdbEvent | null) => {
-
-
-    const { data: matches, loading } = useCachedFetch(
+    const { data: matches, loading, flushCache } = useCachedFetch(
         selectedEvent === null ? null : `//localhost:5174/event/${selectedEvent.event_id}/match`, 
         (matches: VdbMatchRaw[]) => 
             matches.map(match => ({
@@ -49,12 +72,11 @@ export const useMatches = (selectedEvent: VdbEvent | null) => {
             }))
     );
 
-    return { matches, loading };
+    return { matches, loading, flushCache };
 };
 
 export const useTeams = (selectedEvent: VdbEvent | null, searchQuery='') => {
-
-    const { data, loading } = useCachedFetch<VdbTeam[]>(
+    const { data, loading, flushCache, set } = useCachedFetch<VdbTeam[]>(
         selectedEvent === null ? null : `//localhost:5174/event/${selectedEvent.event_id}/team`,
     );
 
@@ -63,12 +85,16 @@ export const useTeams = (selectedEvent: VdbEvent | null, searchQuery='') => {
         teams = teams?.filter(team => `${team.team_id} ${team.team_name}`.toLowerCase().includes(searchQuery.toLowerCase())) ?? null;
     }
 
-    return { teams, loading };
+    return {
+        teams,
+        loading,
+        flushCache,
+        setTeams: set,
+    };
 };
 
 export const useJudges = (selectedEvent: VdbEvent | null, judgesSearch: string) => {
-
-    const { data, loading } = useCachedFetch<VdbJudge[]>(
+    const { data, loading, flushCache } = useCachedFetch<VdbJudge[]>(
         selectedEvent === null ? null : `//localhost:5174/event/${selectedEvent.event_id}/judge`,
     );
 
@@ -77,11 +103,11 @@ export const useJudges = (selectedEvent: VdbEvent | null, judgesSearch: string) 
         judges = judges?.filter(judge => `${judge.contact_first_name} ${judge.contact_last_name}`.toLowerCase().includes(judgesSearch.toLowerCase())) ?? null;
     }
 
-    return { judges, loading };
+    return { judges, loading, flushCache };
 };
 
 export const useMentors = (selectedEvent: VdbEvent | null, mentorsSearch: string) => {
-    const { data, loading } = useCachedFetch<VdbMentor[]>(
+    const { data, loading, flushCache } = useCachedFetch<VdbMentor[]>(
         selectedEvent === null ? null : `//localhost:5174/event/${selectedEvent.event_id}/mentor`,
     );
 
@@ -90,11 +116,11 @@ export const useMentors = (selectedEvent: VdbEvent | null, mentorsSearch: string
         mentors = mentors?.filter(mentor => `${mentor.contact_first_name} ${mentor.contact_last_name}`.toLowerCase().includes(mentorsSearch.toLowerCase())) ?? null;
     }
 
-    return { mentors, loading };
+    return { mentors, loading, flushCache };
 };
 
 export const useVolunteers = (selectedEvent: VdbEvent | null, volunteersSearch: string) => {
-    const { data, loading } = useCachedFetch<VdbVolunteer[]>(
+    const { data, loading, flushCache } = useCachedFetch<VdbVolunteer[]>(
         selectedEvent === null ? null : `//localhost:5174/event/${selectedEvent.event_id}/volunteer`, 
     );
 
@@ -103,7 +129,7 @@ export const useVolunteers = (selectedEvent: VdbEvent | null, volunteersSearch: 
         volunteers = volunteers?.filter(volunteer => `${volunteer.contact_first_name} ${volunteer.contact_last_name}`.toLowerCase().includes(volunteersSearch.toLowerCase())) ?? null;
     }
 
-    return { volunteers, loading };
+    return { volunteers, loading, flushCache };
 }; 
 
 export const useContacts = (selectedEvent: VdbEvent | null, judgesSearch: string, mentorsSearch: string, volunteersSearch: string) => {
@@ -111,10 +137,10 @@ export const useContacts = (selectedEvent: VdbEvent | null, judgesSearch: string
         return {judges: null, mentors: null, volunteers: null, loading: true};
     }
 
-    const { judges, loading: judgesLoading } = useJudges(selectedEvent, judgesSearch);
-    const { mentors, loading: mentorsLoading } = useMentors(selectedEvent, mentorsSearch);
-    const { volunteers, loading: volunteersLoading } = useVolunteers(selectedEvent, volunteersSearch);
-    const { teams, loading: teamsLoading } = useTeams(selectedEvent);
+    const { judges, loading: judgesLoading, flushCache: judgesFlushCache } = useJudges(selectedEvent, judgesSearch);
+    const { mentors, loading: mentorsLoading, flushCache: mentorsFlushCache } = useMentors(selectedEvent, mentorsSearch);
+    const { volunteers, loading: volunteersLoading, flushCache: volunteersFlushCache } = useVolunteers(selectedEvent, volunteersSearch);
+    const { teams, loading: teamsLoading, flushCache: teamsFlushCache } = useTeams(selectedEvent);
 
     const loading = judgesLoading || mentorsLoading || volunteersLoading || teamsLoading;
     const {mentorList, judgeList, volunteerList} = useMemo(() => {
@@ -193,18 +219,18 @@ export const useContacts = (selectedEvent: VdbEvent | null, judgesSearch: string
     return { judges: judgeList, mentors: mentorList, volunteers: volunteerList, loading };
 };
 
-export const useAwards = (selectedEvent: VdbEvent | null) => {
-    const { data: awards, loading } = useCachedFetch<VdbAward[]>(
+export const useAwards = (selectedEvent: VdbEvent | null, useInitialCache=true) => {
+    const { data: awards, loading, flushCache } = useCachedFetch<VdbAward[]>(
         selectedEvent === null ? null : `//localhost:5174/event/${selectedEvent.event_id}/award`,
     );
 
-    return { awards, loading };
+    return { awards, loading, flushCache };
 };
 
 export const useTripleImpactContributor = (selectedSeason: VdbSeason | null) => {
-    const { data: tripleImpactContributor, loading } = useCachedFetch<VdbTripleImpactContributor>(
+    const { data: tripleImpactContributor, loading, flushCache } = useCachedFetch<VdbTripleImpactContributor>(
         selectedSeason === null ? null : `//localhost:5174/season/${selectedSeason.season_year}/triple-impact-contributor`,
     );
 
-    return { tripleImpactContributor, loading };
+    return { tripleImpactContributor, loading, flushCache };
 };

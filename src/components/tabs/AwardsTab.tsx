@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAtom } from 'jotai';
 import { selectedEventAtom } from '../../store';
 import { useAwards } from '../../hooks';
 
 export const AwardsTab = () => {
   const [selectedEvent, setSelectedEvent] = useAtom(selectedEventAtom);
-  const { awards, loading } = useAwards(selectedEvent);
+  const { awards, loading,  flushCache } = useAwards(selectedEvent);
 
   return (<div className="bg-white p-6 rounded-lg shadow-md max-w-2xl mx-auto">
     <h2 className="text-2xl font-semibold text-gray-800 mb-6">Awards</h2>

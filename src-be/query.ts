@@ -83,7 +83,7 @@ CREATE TABLE Award (
     award_qualification VARCHAR(255) NOT NULL,
     award_team_id VARCHAR(16) NOT NULL,
     award_event_id INT NOT NULL, 
-    FOREIGN KEY (award_team_id, award_event_id) REFERENCES Registration(team_id, event_id)
+    FOREIGN KEY (award_team_id, award_event_id) REFERENCES Registration(team_id, event_id) ON DELETE CASCADE
 );
 `;
 
@@ -98,10 +98,10 @@ CREATE TABLE Match (
     match_team_id_blue_2 VARCHAR(16) NOT NULL,
     match_time DATE NOT NULL,
     event_id INT NOT NULL,
-    FOREIGN KEY (match_team_id_red_1, event_id) REFERENCES Registration(team_id, event_id),
-    FOREIGN KEY (match_team_id_red_2, event_id) REFERENCES Registration(team_id, event_id),
-    FOREIGN KEY (match_team_id_blue_1, event_id) REFERENCES Registration(team_id, event_id),
-    FOREIGN KEY (match_team_id_blue_2, event_id) REFERENCES Registration(team_id, event_id)
+    FOREIGN KEY (match_team_id_red_1, event_id) REFERENCES Registration(team_id, event_id) ON DELETE CASCADE,
+    FOREIGN KEY (match_team_id_red_2, event_id) REFERENCES Registration(team_id, event_id) ON DELETE CASCADE,
+    FOREIGN KEY (match_team_id_blue_1, event_id) REFERENCES Registration(team_id, event_id) ON DELETE CASCADE,
+    FOREIGN KEY (match_team_id_blue_2, event_id) REFERENCES Registration(team_id, event_id) ON DELETE CASCADE
 );
 `;
 };
@@ -312,3 +312,9 @@ SELECT c.contact_first_name, c.contact_last_name,
     ORDER BY total_hours DESC
     LIMIT 1;
 `)[0];
+
+export const deleteRegistration = (teamId: string, eventId: number) => sql`
+DELETE FROM Registration
+    WHERE team_id = ${teamId}
+        AND event_id = ${eventId};
+`;

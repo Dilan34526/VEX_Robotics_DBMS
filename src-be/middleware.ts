@@ -37,7 +37,7 @@ export const wrapAsyncErrors = (handler: express.RequestHandler) =>
         try {
             await handler(req, res, next);
         } catch (error) {
-            res.json({
+            res.status(500).json({
                 error: true,
                 message: (error as Error).stack,
             });

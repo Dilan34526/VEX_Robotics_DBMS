@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAtom } from 'jotai';
 import { selectedEventAtom } from '../../store';
 import { useMatches } from '../../hooks';
 
 export const MatchesTab = () => {
     const [selectedEvent, setSelectedEvent] = useAtom(selectedEventAtom);
-    const { matches, loading } = useMatches(selectedEvent);
+    const { matches, loading, flushCache } = useMatches(selectedEvent);
 
     return (
         <div className="bg-white p-6 rounded-lg shadow-md max-w-2xl mx-auto">
