@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { VdbRes, VdbMatch, VdbTeam, VdbMatchRaw, VdbJudge, VdbMentor, VdbVolunteer, VdbContact, VdbAward, VdbSeason, VdbTripleImpactContributor } from './types';
 
 type VdbEvent = { event_id: number };
@@ -15,12 +15,14 @@ export const useCachedFetch = <O, T=O>(
     const [data, setData] = useState<T | null>(null);
     const [loading, setLoading] = useState(true);
 
+    const signal = useRef(new AbortController());
+
     const reload = async () => {
         if (url === null) return;
 
         setLoading(true);
 
-        const response = await fetch(url);
+        const response = await fetch(url, { signal: signal.current.signal });
         const responseData: VdbRes<O> = await response.json();
         
         const transformedData = transformData(responseData.data!);
@@ -31,6 +33,9 @@ export const useCachedFetch = <O, T=O>(
 
     const set = (data: T) => {
         if (url === null) return;
+
+        signal.current.abort();
+        signal.current = new AbortController();
 
         cache.set(url, data);
         setData(data);

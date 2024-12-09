@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 import { VexRoboticsLayout } from './VexRoboticsLayout';
 import { VdbRes, VdbSeason, VdbEvent } from '../types';
@@ -11,7 +10,6 @@ export const LaunchPage = () => {
   const [events, setEvents] = useState<VdbEvent[]>([]);
   const [selectedSeason, setSelectedSeason] = useState<VdbSeason | null>(null);
   const [selectedEvent, setSelectedEvent] = useState<VdbEvent | null>(null);
-  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
 
   const fetchData = async () => {

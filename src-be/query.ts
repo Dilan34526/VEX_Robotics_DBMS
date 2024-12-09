@@ -51,7 +51,7 @@ CREATE TABLE Team (
 CREATE TABLE Registration (
     team_id VARCHAR(16) NOT NULL REFERENCES Team(team_id),
     event_id INT NOT NULL REFERENCES Event(event_id),
-    judge_contact_id INT NOT NULL REFERENCES Contact(contact_id),
+    judge_contact_id INT REFERENCES Contact(contact_id),
     judge_notebook_score INT,
     judge_hours DECIMAL(6, 2) NOT NULL DEFAULT 0,
     PRIMARY KEY (team_id, event_id)
@@ -344,4 +344,20 @@ SELECT c.*, SUM(v.volunteer_hours) AS total_hours
     WHERE e.event_season_year = ${seasonYear}  
     GROUP BY c.contact_id
     ORDER BY total_hours ASC;
+`;
+
+export const searchTeamsNotInEvent = (eventId: number, query: string) => sql`
+SELECT t.team_id, t.team_name 
+    FROM Team t
+    WHERE t.team_id NOT IN (
+        SELECT r.team_id
+            FROM Registration r
+            WHERE r.event_id = ${eventId}
+    )
+        AND LOWER(t.team_name) LIKE LOWER(${query});
+`;
+
+export const insertTeamIntoEvent = (teamId: string, eventId: number) => sql`
+INSERT INTO Registration (team_id, event_id)
+    VALUES (${teamId}, ${eventId});
 `;
