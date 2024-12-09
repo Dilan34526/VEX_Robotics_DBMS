@@ -234,3 +234,11 @@ export const useTripleImpactContributor = (selectedSeason: VdbSeason | null) => 
 
     return { tripleImpactContributor, loading, flushCache };
 };
+
+export const useStingiestJudge = (selectedSeason: VdbSeason | null) => {
+    const { data: stingiestJudge, loading, flushCache } = useCachedFetch<VdbContact & { avg_score: string }>(
+        selectedSeason === null ? null : `//localhost:5174/season/${selectedSeason.season_year}/stingiest-judge`,
+    );
+
+    return { stingiestJudge, loading, flushCache };
+};

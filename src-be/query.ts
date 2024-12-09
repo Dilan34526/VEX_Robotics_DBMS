@@ -323,3 +323,15 @@ DELETE FROM Registration
     WHERE team_id = ${teamId}
         AND event_id = ${eventId};
 `;
+
+export const getStingiestJudge = async (seasonYear: number) => (await sql`
+SELECT c.*, AVG(r.judge_notebook_score) AS avg_score
+    FROM Registration r
+        JOIN Team t ON t.team_id = r.team_id
+        JOIN Event e ON e.event_id = r.event_id  
+        JOIN Contact c ON r.judge_contact_id = c.contact_id
+    WHERE e.event_season_year = ${seasonYear}
+    GROUP BY c.contact_id
+    ORDER BY avg_score ASC
+    LIMIT 1;
+`)[0];

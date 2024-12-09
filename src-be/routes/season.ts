@@ -1,5 +1,5 @@
 import express from "express";
-import { getSeasons, getTripleImpactContributor, insertSeason } from "@/query";
+import { getSeasons, getTripleImpactContributor, insertSeason, getStingiestJudge } from "@/query";
 import { requireBodyParams, wrapAsyncErrors } from "@/middleware";
 
 export const season = express.Router();
@@ -35,6 +35,17 @@ season.get("/:seasonYear/triple-impact-contributor",
             res.json({
                 error: false,
                 data: await getTripleImpactContributor(parseInt(req.params.seasonYear)),
+            });
+        },
+    ),
+);
+
+season.get("/:seasonYear/stingiest-judge",
+    wrapAsyncErrors(
+        async (req, res) => {
+            res.json({
+                error: false,
+                data: await getStingiestJudge(parseInt(req.params.seasonYear)),
             });
         },
     ),
