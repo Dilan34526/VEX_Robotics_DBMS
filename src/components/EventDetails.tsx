@@ -5,13 +5,12 @@ import {ContactsTab} from './tabs/ContactsTab';
 import {MatchesTab} from './tabs/MatchesTab';
 import { VexRoboticsLayout } from './VexRoboticsLayout';
 import { useAtom } from 'jotai';
-import { selectedEventAtom } from '../store';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
+import { VdbEvent } from '../types';
 
-export const ManageEvent = () => {
+export const EventDetails = ({ selectedEvent }: { selectedEvent: VdbEvent | null }) => {
   const [activeTab, setActiveTab] = useState('awards');
-  const [selectedEvent, setSelectedEvent] = useAtom(selectedEventAtom);
   const navigate = useNavigate();
 
 
@@ -22,13 +21,13 @@ export const ManageEvent = () => {
   const renderTabContent = () => {
     switch(activeTab) {
       case 'awards':
-        return <AwardsTab />;
+        return <AwardsTab event={selectedEvent} />;
       case 'teams':
-        return <TeamsTab />;
+        return <TeamsTab event={selectedEvent} />;
       case 'contacts':
-        return <ContactsTab />;
+        return <ContactsTab event={selectedEvent} />;
       case 'matches':
-        return <MatchesTab />;
+        return <MatchesTab event={selectedEvent} />;
       default:
         return null;
     }

@@ -1,12 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { useAtom } from 'jotai';
-import { selectedEventAtom } from '../../store';
+import React from 'react';
 import { useAwards } from '../../hooks';
 import { Card } from '../Card';
+import { VdbEvent } from '../../types';
 
-export const AwardsTab = () => {
-  const [selectedEvent, setSelectedEvent] = useAtom(selectedEventAtom);
-  const { awards, loading,  flushCache } = useAwards(selectedEvent);
+export const AwardsTab = ({ event }: { event: VdbEvent }) => {
+  const { awards, loading } = useAwards(event);
 
   return (<Card>
     <div className="space-y-6">

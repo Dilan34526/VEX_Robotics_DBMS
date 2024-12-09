@@ -1,18 +1,16 @@
 import React, { useState } from 'react';
-import { useAtom } from 'jotai';
-import { selectedEventAtom } from '../../store';
-import { clearCache, useTeams } from '../../hooks';
+import { useTeams } from '../../hooks';
 import { Card } from '../Card';
+import { VdbEvent } from '../../types';
 
-export const TeamsTab = () => {
-    const [selectedEvent, setSelectedEvent] = useAtom(selectedEventAtom);
+export const TeamsTab = ({ event }: { event: VdbEvent }) => {
     const [searchQuery, setSearchQuery] = useState('');
-    const { teams, loading, flushCache, setTeams } = useTeams(selectedEvent, searchQuery);
+    const { teams, loading, setTeams } = useTeams(event, searchQuery);
 
     const deleteTeam = async (teamId: string) => {
-        if (selectedEvent === null) return;
+        if (event === null) return;
 
-        await fetch(`//localhost:5174/event/${selectedEvent.event_id}/team/${teamId}`, {
+        await fetch(`//localhost:5174/event/${event.event_id}/team/${teamId}`, {
             method: 'DELETE',
         });
 

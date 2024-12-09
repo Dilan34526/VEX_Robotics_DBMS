@@ -3,23 +3,17 @@ import { useNavigate } from 'react-router-dom';
 
 import { VexRoboticsLayout } from './VexRoboticsLayout';
 import { VdbRes, VdbSeason, VdbEvent } from '../types';
-import { selectedEventAtom } from '../store';
 import { useAtom } from 'jotai';
-import { useCachedFetch, useTripleImpactContributor } from '../hooks';
-import { ManageEvent } from './ManageEvent';
-import { Card } from './Card';
 import { Debug } from './Debug';
-
-
-
+import { SeasonDetails } from './SeasonDetails';
+import { EventDetails } from './EventDetails';
 export const LaunchPage = () => {
   const [seasons, setSeasons] = useState<VdbSeason[]>([]);
   const [events, setEvents] = useState<VdbEvent[]>([]);
   const [selectedSeason, setSelectedSeason] = useState<VdbSeason | null>(null);
-  const [selectedEvent, setSelectedEvent] = useAtom(selectedEventAtom);
+  const [selectedEvent, setSelectedEvent] = useState<VdbEvent | null>(null);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
-  const { tripleImpactContributor, loading: tripleImpactContributorLoading } = useTripleImpactContributor(selectedSeason);
 
   useEffect(() => {
     const fetchSeasons = async () => {
@@ -73,43 +67,15 @@ export const LaunchPage = () => {
                   key={season.season_year}
                   value={season.season_year}
                 >
-                  {season.season_name}
+                  {season.season_year} - {season.season_name}
                 </option>
               ))}
             </select>
           </div>
           
-          {selectedSeason && (
-            <Card>
-              <div className="grid grid-cols-3 gap-4 items-center justify-items-center">
-                  <h3 className="text-lg font-bold text-gray-700">Triple impact contributor</h3>
-                  {tripleImpactContributorLoading ? (
-                    <div>Loading...</div>
-                  ) : (
-                    tripleImpactContributor
-                      ?  (
-                        <div>
-                          {tripleImpactContributor.contact_first_name} {tripleImpactContributor.contact_last_name} 
-                        </div>
-                      )
-                      : (
-                        <div>No contacts qualify</div>
-                      )
-                  )}
-                {
-                  !tripleImpactContributorLoading && tripleImpactContributor && (
-                    <div className="flex gap-2 items-center space-y-2 ">
-                      <span className="text-sm text-gray-500">
-                        {tripleImpactContributor.total_hours} h
-                        <br />
-                        = {tripleImpactContributor.volunteer_hours} volunteer + {tripleImpactContributor.mentor_hours} mentor + {tripleImpactContributor.judge_hours} judge
-                      </span>
-                    </div>
-                  )
-                }
-              </div>
-            </Card>
-          )}
+          <SeasonDetails 
+            selectedSeason={selectedSeason}
+          />
 
           {selectedSeason && (
             <div className="space-y-2">
@@ -136,7 +102,7 @@ export const LaunchPage = () => {
           )}
 
           {selectedSeason && selectedEvent && (
-            <ManageEvent />
+            <EventDetails selectedEvent={selectedEvent} />
           )}
         </div>
       )}

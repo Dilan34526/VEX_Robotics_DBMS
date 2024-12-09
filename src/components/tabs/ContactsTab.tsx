@@ -1,16 +1,14 @@
 import React, { useState } from 'react';
-import { useAtom } from 'jotai';
-import { selectedEventAtom } from '../../store';
-import { useContacts, useJudges, useMentors, useVolunteers } from '../../hooks';
+import { useContacts } from '../../hooks';
 import { Card } from '../Card';
+import { VdbEvent } from '../../types';
 
-export const ContactsTab = () => {
-    const [selectedEvent, setSelectedEvent] = useAtom(selectedEventAtom);
+export const ContactsTab = ({ event }: { event: VdbEvent }) => {
     const [judgesSearch, setJudgesSearch] = useState('');
     const [mentorsSearch, setMentorsSearch] = useState('');
     const [volunteersSearch, setVolunteersSearch] = useState('');
     const [filterUnderperforming, setFilterUnderperforming] = useState(false);
-    const { judges, mentors, volunteers, loading } = useContacts(selectedEvent, judgesSearch, mentorsSearch, volunteersSearch);
+    const { judges, mentors, volunteers, loading } = useContacts(event, judgesSearch, mentorsSearch, volunteersSearch);
 
     const filteredVolunteers = volunteers?.filter((volunteer) => !filterUnderperforming || volunteer.hours < 40) ?? [];
 

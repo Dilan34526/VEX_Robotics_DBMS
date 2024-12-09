@@ -104,6 +104,10 @@ CREATE TABLE Match (
     FOREIGN KEY (match_team_id_blue_2, event_id) REFERENCES Registration(team_id, event_id) ON DELETE CASCADE
 );
 `;
+
+    await s`
+CREATE INDEX idx_volunteer_hours ON Volunteers USING BTREE (volunteer_hours);
+`;
 };
 
 export const insertSeason = async (year: number, name: string, s=sql) => await s`
