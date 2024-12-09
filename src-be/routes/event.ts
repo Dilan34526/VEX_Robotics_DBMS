@@ -1,5 +1,5 @@
 import express from "express";
-import { getTeamsByEventId, getAwardsByEventId, getVolunteersByEventId, getMentorsByEventId, getJudgesByEventId, getEvents, getMatchesByEventId, deleteRegistration, searchTeamsNotInEvent, insertTeamIntoEvent } from "@/query";
+import { getTeamsByEventId, getAwardsByEventId, getVolunteersByEventId, getMentorsByEventId, getJudgesByEventId, getEvents, getMatchesByEventId, deleteRegistration, searchTeamsNotInEvent, insertTeamIntoEvent, updateMatchScore } from "@/query";
 import { wrapAsyncErrors } from "@/middleware";
 
 export const event = express.Router();
@@ -129,6 +129,22 @@ event.post("/:eventId/team",
             const { teamId } = req.body;
 
             await insertTeamIntoEvent(teamId, parseInt(eventId));
+
+            res.json({
+                error: false,
+            });
+        }
+    )
+);
+
+event.put("/:eventId/match/:matchId",
+    wrapAsyncErrors(
+        async (req, res) => {
+            const eventId = parseInt(req.params.eventId);
+            const matchId = parseInt(req.params.matchId);
+            const { red: redScore, blue: blueScore } = req.body;
+
+            await updateMatchScore(matchId, redScore, blueScore);
 
             res.json({
                 error: false,

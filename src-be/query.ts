@@ -361,3 +361,9 @@ export const insertTeamIntoEvent = (teamId: string, eventId: number) => sql`
 INSERT INTO Registration (team_id, event_id)
     VALUES (${teamId}, ${eventId});
 `;
+
+export const updateMatchScore = (matchId: number, redScore: number, blueScore: number) => sql`
+UPDATE Match
+    SET match_red_score = ${redScore}, match_blue_score = ${blueScore}
+    WHERE match_id = ${matchId};
+`;

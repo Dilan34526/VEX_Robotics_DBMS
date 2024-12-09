@@ -68,7 +68,7 @@ export const useCachedFetch = <O, T=O>(
 };
 
 export const useMatches = (selectedEvent: VdbEvent | null) => {
-    const { data: matches, loading, flushCache } = useCachedFetch(
+    const { data: matches, loading, flushCache, set } = useCachedFetch(
         selectedEvent === null ? null : `//localhost:5174/event/${selectedEvent.event_id}/match`, 
         (matches: VdbMatchRaw[]) => 
             matches.map(match => ({
@@ -77,7 +77,7 @@ export const useMatches = (selectedEvent: VdbEvent | null) => {
             }))
     );
 
-    return { matches, loading, flushCache };
+    return { matches, loading, flushCache, setMatches: set };
 };
 
 export const useTeams = (selectedEvent: VdbEvent | null, searchQuery='') => {
@@ -166,7 +166,8 @@ export const useContacts = (selectedEvent: VdbEvent | null, judgesSearch: string
         const hoursByMentor = new Map<number, number>();
 
         for (const team of teams!) {
-            const judge = judgesById.get(team.judge_contact_id)!;
+            const judge = judgesById.get(team.judge_contact_id);
+            if (!judge) continue;
 
             if (teamsByJudge.has(judge.contact_id)) {
                 teamsByJudge.get(judge.contact_id)!.push(team);
