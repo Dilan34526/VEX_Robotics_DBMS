@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { VdbRes, VdbMatch, VdbTeam, VdbMatchRaw, VdbJudge, VdbMentor, VdbVolunteer, VdbContact, VdbAward, VdbSeason, VdbTripleImpactContributor } from './types';
 
 type VdbEvent = { event_id: number };
@@ -20,6 +20,7 @@ export const useCachedFetch = <O, T=O>(
         if (cache.has(url)) {
             setData(cache.get(url));
             setLoading(false);
+            return;
         }
 
         (async () => {
@@ -69,7 +70,6 @@ export const useJudges = (selectedEvent: VdbEvent | null, judgesSearch: string) 
 
     const { data, loading } = useCachedFetch<VdbJudge[]>(
         selectedEvent === null ? null : `//localhost:5174/event/${selectedEvent.event_id}/judge`,
-        judges => judges.map(judge => ({...judge}))
     );
 
     let judges = data;
@@ -83,7 +83,6 @@ export const useJudges = (selectedEvent: VdbEvent | null, judgesSearch: string) 
 export const useMentors = (selectedEvent: VdbEvent | null, mentorsSearch: string) => {
     const { data, loading } = useCachedFetch<VdbMentor[]>(
         selectedEvent === null ? null : `//localhost:5174/event/${selectedEvent.event_id}/mentor`,
-        mentors => mentors.map(mentor => ({...mentor}))
     );
 
     let mentors = data;
@@ -95,9 +94,8 @@ export const useMentors = (selectedEvent: VdbEvent | null, mentorsSearch: string
 };
 
 export const useVolunteers = (selectedEvent: VdbEvent | null, volunteersSearch: string) => {
-    const { data, loading } = useCachedFetch<VdbContact[]>(
+    const { data, loading } = useCachedFetch<VdbVolunteer[]>(
         selectedEvent === null ? null : `//localhost:5174/event/${selectedEvent.event_id}/volunteer`, 
-        volunteers => volunteers.map(volunteer => ({...volunteer}))
     );
 
     let volunteers = data;
@@ -118,49 +116,81 @@ export const useContacts = (selectedEvent: VdbEvent | null, judgesSearch: string
     const { volunteers, loading: volunteersLoading } = useVolunteers(selectedEvent, volunteersSearch);
     const { teams, loading: teamsLoading } = useTeams(selectedEvent);
 
-    if (judgesLoading || mentorsLoading || volunteersLoading || teamsLoading) {
-        return {judges: null, mentors: null, volunteers: null, loading: true};
-    }
-
-    const teamsById = new Map(teams!.map(team => [team.team_id, team]));
-    const judgesById = new Map(judges!.map(judge => [judge.contact_id, judge]));
-    const mentorsById = new Map(mentors!.map(mentor => [mentor.contact_id, mentor]));
-
-    const teamsByJudge = new Map<number, VdbTeam[]>();
-    const hoursByJudge = new Map<number, number>();
-    const teamsByMentor = new Map<number, VdbTeam[]>();
-    for (const team of teams!) {
-        const judge = judgesById.get(team.judge_contact_id)!;
-
-        if (teamsByJudge.has(judge.contact_id)) {
-            teamsByJudge.get(judge.contact_id)!.push(team);
-        } else {
-            teamsByJudge.set(judge.contact_id, [team]);
+    const loading = judgesLoading || mentorsLoading || volunteersLoading || teamsLoading;
+    const {mentorList, judgeList, volunteerList} = useMemo(() => {
+        if (loading) {
+            return {judgeList: null, mentorList: null, volunteerList: null};
         }
 
-        if (hoursByJudge.has(judge.contact_id)) {
-            hoursByJudge.set(judge.contact_id, hoursByJudge.get(judge.contact_id)! + judge.judge_hours);
-        } else {
-            hoursByJudge.set(judge.contact_id, judge.judge_hours);
+        const teamsById = new Map(teams!.map(team => [team.team_id, team]));
+        const judgesById = new Map(judges!.map(judge => [judge.contact_id, judge]));
+        const mentorsById = new Map(mentors!.map(mentor => [mentor.contact_id, mentor]));
+        const volunteersById = new Map(volunteers!.map(volunteer => [volunteer.contact_id, volunteer]));
+
+        const teamsByJudge = new Map<number, VdbTeam[]>();
+        const teamsByMentor = new Map<number, VdbTeam[]>();
+
+        const hoursByJudge = new Map<number, number>();
+        const hoursByVolunteer = new Map<number, number>();
+        const hoursByMentor = new Map<number, number>();
+
+        for (const team of teams!) {
+            const judge = judgesById.get(team.judge_contact_id)!;
+
+            if (teamsByJudge.has(judge.contact_id)) {
+                teamsByJudge.get(judge.contact_id)!.push(team);
+            } else {
+                teamsByJudge.set(judge.contact_id, [team]);
+            }
+
+            if (hoursByJudge.has(judge.contact_id)) {
+                hoursByJudge.set(judge.contact_id, hoursByJudge.get(judge.contact_id)! + parseFloat(judge.judge_hours));
+            } else {
+                hoursByJudge.set(judge.contact_id, parseFloat(judge.judge_hours));
+            }
         }
-    }
 
-    for (const mentor of mentors!) {
-        if (teamsByMentor.has(mentor.contact_id)) {
-            teamsByMentor.get(mentor.contact_id)!.push(teamsById.get(mentor.team_id)!);
-        } else {
-            teamsByMentor.set(mentor.contact_id, [teamsById.get(mentor.team_id)!]);
+        for (const mentor of mentors!) {
+            if (teamsByMentor.has(mentor.contact_id)) {
+                teamsByMentor.get(mentor.contact_id)!.push(teamsById.get(mentor.team_id)!);
+            } else {
+                teamsByMentor.set(mentor.contact_id, [teamsById.get(mentor.team_id)!]);
+            }
+
+            if (hoursByMentor.has(mentor.contact_id)) {
+                hoursByMentor.set(mentor.contact_id, hoursByMentor.get(mentor.contact_id)! + parseFloat(mentor.mentor_hours));
+            } else {
+                hoursByMentor.set(mentor.contact_id, parseFloat(mentor.mentor_hours));
+            }
         }
-    }
 
-    const mentorsList = [...teamsByMentor.entries()].map(([mentorId, teams]) => ({...mentorsById.get(mentorId)!, teams}));
-    const judgesList = [...teamsByJudge.entries()].map(([judgeId, teams]) => ({
-        ...judgesById.get(judgeId)!,
-        teams,
-        hours: hoursByJudge.get(judgeId)!,
-    }));
+        for (const volunteer of volunteers!) {
+            if (hoursByVolunteer.has(volunteer.contact_id)) {
+                hoursByVolunteer.set(volunteer.contact_id, hoursByVolunteer.get(volunteer.contact_id)! + parseFloat(volunteer.volunteer_hours));
+            } else {
+                hoursByVolunteer.set(volunteer.contact_id, parseFloat(volunteer.volunteer_hours));
+            }
+        }
 
-    return { judges: judgesList, mentors: mentorsList, volunteers, loading: false };
+        return {
+            mentorList: [...teamsByMentor.entries()].map(([mentorId, teams]) => ({
+                ...mentorsById.get(mentorId)!,
+                teams,
+                hours: hoursByMentor.get(mentorId)!,
+            })),
+            judgeList: [...teamsByJudge.entries()].map(([judgeId, teams]) => ({
+                ...judgesById.get(judgeId)!,
+                teams,
+                hours: hoursByJudge.get(judgeId)!,
+            })),
+            volunteerList: [...hoursByVolunteer.entries()].map(([volunteerId, hours]) => ({
+                ...volunteersById.get(volunteerId)!,
+                hours,
+            })),
+        };
+    }, [teams, judges, mentors, volunteers]);
+
+    return { judges: judgeList, mentors: mentorList, volunteers: volunteerList, loading };
 };
 
 export const useAwards = (selectedEvent: VdbEvent | null) => {

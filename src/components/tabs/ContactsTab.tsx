@@ -8,7 +8,10 @@ export const ContactsTab = () => {
     const [judgesSearch, setJudgesSearch] = useState('');
     const [mentorsSearch, setMentorsSearch] = useState('');
     const [volunteersSearch, setVolunteersSearch] = useState('');
+    const [filterUnderperforming, setFilterUnderperforming] = useState(false);
     const { judges, mentors, volunteers, loading } = useContacts(selectedEvent, judgesSearch, mentorsSearch, volunteersSearch);
+
+    const filteredVolunteers = volunteers?.filter((volunteer) => !filterUnderperforming || volunteer.hours < 40) ?? [];
 
     return (<div className="flex flex-col gap-8 bg-white p-6 rounded-lg shadow-md max-w-2xl mx-auto">
       <h2 className="text-2xl font-semibold text-gray-800">Event contacts</h2>
@@ -17,9 +20,6 @@ export const ContactsTab = () => {
           <h3 className="text-lg font-medium text-gray-700 mb-3">Quick actions</h3> 
           
           <div className="grid grid-cols-3 gap-5">
-            <button className="w-full bg-yellow-500 text-white p-2 rounded-md hover:bg-yellow-600">
-              Find underperforming volunteers
-            </button>
             <button className="w-full bg-purple-500 text-white p-2 rounded-md hover:bg-purple-600">
               List mentors judging same team
             </button>
@@ -45,13 +45,22 @@ export const ContactsTab = () => {
                 Add
               </button>
             </div>
+            <label className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                checked={filterUnderperforming}
+                onChange={(e) => setFilterUnderperforming(e.target.checked)}
+              />
+              Show only underperforming
+            </label>
             <div className="border rounded-md max-h-48 overflow-y-auto">
               {loading ? (
                 <div className="p-2">Loading...</div>
               ) : (
-                volunteers?.map((volunteer) => (
-                  <div key={volunteer.contact_id} className="p-2 border-b hover:bg-gray-50">
-                    {volunteer.contact_first_name} {volunteer.contact_last_name}
+                filteredVolunteers?.map((volunteer) => (
+                  <div key={volunteer.contact_id} className="flex gap-2 items-center p-2 border-b hover:bg-gray-50">
+                    <span>{volunteer.contact_first_name} {volunteer.contact_last_name}</span>
+                    <span className={`text-gray-500 ${volunteer.hours < 40 ? 'text-red-500' : ''}`}>({volunteer.hours} h)</span>
                   </div>
                 ))
               )}
@@ -82,7 +91,7 @@ export const ContactsTab = () => {
                 mentors?.map((mentor) => (
                   <div key={mentor.contact_id} className="flex gap-2 items-center p-2 border-b hover:bg-gray-50">
                     <span>{mentor.contact_first_name} {mentor.contact_last_name}</span>
-                    <span className="text-gray-500">({mentor.teams.map(team => team.team_id).join(', ')})</span>
+                    <span className="text-gray-500">({mentor.teams.map(team => team.team_id).join(', ')}; {mentor.hours} h)</span>
                   </div>
                 ))
               )}

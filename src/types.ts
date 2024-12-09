@@ -54,15 +54,16 @@ export type VdbContact = {
 
 export type VdbJudge = VdbContact & {
     team_id: string,
-    judge_hours: number,
+    judge_hours: string,
 };
 
 export type VdbMentor = VdbContact & {
     team_id: string,
+    mentor_hours: string,
 };
 
 export type VdbVolunteer = VdbContact & {
-    volunteer_hours: number,
+    volunteer_hours: string,
 };
 
 export type VdbMatchRaw = {

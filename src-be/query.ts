@@ -254,18 +254,21 @@ SELECT *
 `;
 
 export const getVolunteersByEventId = (eventId: number) => sql`
-SELECT DISTINCT c.*
+SELECT DISTINCT c.*, SUM(v.volunteer_hours) AS volunteer_hours
     FROM Volunteers v
         JOIN Contact c ON v.volunteer_contact_id = c.contact_id
-    WHERE v.event_id = ${eventId};  
+        JOIN Event e ON v.event_id = e.event_id
+    WHERE v.event_id = ${eventId}
+    GROUP BY c.contact_id;  
 `;
 
 export const getMentorsByEventId = (eventId: number) => sql`
-SELECT DISTINCT c.*, m.team_id
+SELECT DISTINCT c.*, m.team_id, SUM(m.mentor_hours) AS mentor_hours
     FROM Mentors m
         JOIN Contact c ON m.mentor_contact_id = c.contact_id
         JOIN Registration r ON m.team_id = r.team_id
-    WHERE r.event_id = ${eventId};
+    WHERE r.event_id = ${eventId}
+    GROUP BY c.contact_id, m.team_id;
 `;
 
 export const getJudgesByEventId = (eventId: number) => sql`  
